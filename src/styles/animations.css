@@ -1,0 +1,192 @@
+/* ═══════════════════════════════════════════════════════
+   NextBell — Animations
+   ═══════════════════════════════════════════════════════ */
+
+/* ─── Card Enter Animation (staggered) ───────────────── */
+@keyframes cardEnter {
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.market-card {
+  animation: cardEnter 0.5s cubic-bezier(0.16, 1, 0.3, 1) backwards;
+}
+
+.market-card:nth-child(1) { animation-delay: 0.02s; }
+.market-card:nth-child(2) { animation-delay: 0.06s; }
+.market-card:nth-child(3) { animation-delay: 0.10s; }
+.market-card:nth-child(4) { animation-delay: 0.14s; }
+.market-card:nth-child(5) { animation-delay: 0.18s; }
+.market-card:nth-child(6) { animation-delay: 0.22s; }
+.market-card:nth-child(7) { animation-delay: 0.26s; }
+.market-card:nth-child(8) { animation-delay: 0.30s; }
+.market-card:nth-child(9) { animation-delay: 0.34s; }
+.market-card:nth-child(10) { animation-delay: 0.38s; }
+.market-card:nth-child(11) { animation-delay: 0.42s; }
+.market-card:nth-child(12) { animation-delay: 0.46s; }
+.market-card:nth-child(n+13) { animation-delay: 0.50s; }
+
+/* ─── Progress dot pulse ─────────────────────────────── */
+@keyframes dotPulse {
+  0%, 100% {
+    box-shadow: 0 0 8px var(--color-open-glow), 0 0 20px var(--color-open-glow);
+    transform: translate(-50%, -50%) scale(1);
+  }
+  50% {
+    box-shadow: 0 0 16px var(--color-open-glow), 0 0 40px var(--color-open-glow);
+    transform: translate(-50%, -50%) scale(1.2);
+  }
+}
+
+/* ─── Bell glow animation ────────────────────────────── */
+@keyframes bellGlow {
+  0%, 100% {
+    box-shadow: 0 0 4px rgba(245, 158, 11, 0.1);
+  }
+  50% {
+    box-shadow: 0 0 12px rgba(245, 158, 11, 0.25);
+  }
+}
+
+/* ─── Bell ring animation (when alert fires) ─────────── */
+@keyframes bellRing {
+  0% { transform: rotate(0); }
+  10% { transform: rotate(14deg); }
+  20% { transform: rotate(-14deg); }
+  30% { transform: rotate(10deg); }
+  40% { transform: rotate(-10deg); }
+  50% { transform: rotate(6deg); }
+  60% { transform: rotate(-6deg); }
+  70% { transform: rotate(2deg); }
+  80% { transform: rotate(-2deg); }
+  90% { transform: rotate(0); }
+  100% { transform: rotate(0); }
+}
+
+.bell-btn--ringing .bell-icon {
+  animation: bellRing 0.8s ease-in-out;
+}
+
+/* ─── Toast animations ───────────────────────────────── */
+@keyframes toastExit {
+  from {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateX(120%);
+    opacity: 0;
+  }
+}
+
+/* ─── Open status badge pulse ────────────────────────── */
+@keyframes openPulse {
+  0%, 100% {
+    box-shadow: 0 0 8px rgba(16, 185, 129, 0.2);
+  }
+  50% {
+    box-shadow: 0 0 16px rgba(16, 185, 129, 0.4);
+  }
+}
+
+.badge--open {
+  animation: openPulse 2.5s ease-in-out infinite;
+}
+
+/* ─── Progress bar shimmer ───────────────────────────── */
+@keyframes progressShimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.progress--open,
+.progress--pre-market,
+.progress--after-hours {
+  background-size: 200% 100%;
+  animation: progressShimmer 3s ease-in-out infinite;
+}
+
+.progress--open {
+  background-image: linear-gradient(
+    90deg,
+    var(--color-open) 0%,
+    #34d399 25%,
+    var(--color-open) 50%,
+    #34d399 75%,
+    var(--color-open) 100%
+  );
+}
+
+.progress--pre-market {
+  background-image: linear-gradient(
+    90deg,
+    var(--color-pre-market) 0%,
+    #fbbf24 25%,
+    var(--color-pre-market) 50%,
+    #fbbf24 75%,
+    var(--color-pre-market) 100%
+  );
+}
+
+.progress--after-hours {
+  background-image: linear-gradient(
+    90deg,
+    var(--color-after-hours) 0%,
+    #a78bfa 25%,
+    var(--color-after-hours) 50%,
+    #a78bfa 75%,
+    var(--color-after-hours) 100%
+  );
+}
+
+/* ─── Header fade in ─────────────────────────────────── */
+@keyframes headerFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.app-header {
+  animation: headerFadeIn 0.4s ease-out;
+}
+
+/* ─── Logo bell pulse ────────────────────────────────── */
+@keyframes logoBellPulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.08);
+  }
+}
+
+.logo-bell {
+  transform-origin: 16px 16px;
+  animation: logoBellPulse 2s ease-in-out infinite;
+}
+
+/* ─── Reduced motion ─────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
