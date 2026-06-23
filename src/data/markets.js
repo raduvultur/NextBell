@@ -18,23 +18,23 @@ const markets = [
     region: 'Americas',
     timezone: 'America/New_York',
     sessions: {
-      preMarket:  { open: '04:00', close: '09:30' },
-      regular:    { open: '09:30', close: '16:00' },
+      preMarket: { open: '04:00', close: '09:30' },
+      regular: { open: '09:30', close: '16:00' },
       afterHours: { open: '16:00', close: '20:00' },
     },
     tradingDays: [1, 2, 3, 4, 5], // Mon-Fri
   },
   {
     id: 'nasdaq',
-    name: 'NASDAQ',
+    name: 'New York',
     shortName: 'NASDAQ',
     country: 'United States',
     countryCode: 'us',
     region: 'Americas',
     timezone: 'America/New_York',
     sessions: {
-      preMarket:  { open: '04:00', close: '09:30' },
-      regular:    { open: '09:30', close: '16:00' },
+      preMarket: { open: '04:00', close: '09:30' },
+      regular: { open: '09:30', close: '16:00' },
       afterHours: { open: '16:00', close: '20:00' },
     },
     tradingDays: [1, 2, 3, 4, 5],
@@ -49,7 +49,7 @@ const markets = [
     timezone: 'America/Toronto',
     sessions: {
       preMarket: { open: '07:00', close: '09:30' },
-      regular:   { open: '09:30', close: '16:00' },
+      regular: { open: '09:30', close: '16:00' },
       afterHours: { open: '16:00', close: '17:00' },
     },
     tradingDays: [1, 2, 3, 4, 5],
@@ -69,7 +69,7 @@ const markets = [
   },
   {
     id: 'b3',
-    name: 'B3 São Paulo',
+    name: 'São Paulo',
     shortName: 'B3',
     country: 'Brazil',
     countryCode: 'br',
@@ -77,7 +77,7 @@ const markets = [
     timezone: 'America/Sao_Paulo',
     sessions: {
       preMarket: { open: '09:45', close: '10:00' },
-      regular:   { open: '10:00', close: '17:30' },
+      regular: { open: '10:00', close: '17:30' },
       afterHours: { open: '17:30', close: '18:00' },
     },
     tradingDays: [1, 2, 3, 4, 5],
@@ -96,7 +96,7 @@ const markets = [
     timezone: 'Europe/London',
     sessions: {
       preMarket: { open: '05:05', close: '08:00' },
-      regular:   { open: '08:00', close: '16:30' },
+      regular: { open: '08:00', close: '16:30' },
       afterHours: { open: '16:40', close: '17:15' },
     },
     tradingDays: [1, 2, 3, 4, 5],
@@ -111,7 +111,7 @@ const markets = [
     timezone: 'Europe/Berlin',
     sessions: {
       preMarket: { open: '07:30', close: '09:00' },
-      regular:   { open: '09:00', close: '17:30' },
+      regular: { open: '09:00', close: '17:30' },
       afterHours: { open: '17:30', close: '20:00' },
     },
     tradingDays: [1, 2, 3, 4, 5],
@@ -119,14 +119,14 @@ const markets = [
   {
     id: 'euronext_paris',
     name: 'Euronext Paris',
-    shortName: 'ENX Paris',
+    shortName: 'ENX',
     country: 'France',
     countryCode: 'fr',
     region: 'Europe',
     timezone: 'Europe/Paris',
     sessions: {
       preMarket: { open: '07:15', close: '09:00' },
-      regular:   { open: '09:00', close: '17:30' },
+      regular: { open: '09:00', close: '17:30' },
       afterHours: { open: '17:30', close: '17:40' },
     },
     tradingDays: [1, 2, 3, 4, 5],
@@ -134,14 +134,14 @@ const markets = [
   {
     id: 'euronext_amsterdam',
     name: 'Euronext Amsterdam',
-    shortName: 'ENX Amsterdam',
+    shortName: 'ENX',
     country: 'Netherlands',
     countryCode: 'nl',
     region: 'Europe',
     timezone: 'Europe/Amsterdam',
     sessions: {
       preMarket: { open: '07:15', close: '09:00' },
-      regular:   { open: '09:00', close: '17:30' },
+      regular: { open: '09:00', close: '17:30' },
       afterHours: { open: '17:30', close: '17:40' },
     },
     tradingDays: [1, 2, 3, 4, 5],
@@ -156,7 +156,7 @@ const markets = [
     timezone: 'Europe/Madrid',
     sessions: {
       preMarket: { open: '08:30', close: '09:00' },
-      regular:   { open: '09:00', close: '17:30' },
+      regular: { open: '09:00', close: '17:30' },
     },
     tradingDays: [1, 2, 3, 4, 5],
   },
@@ -170,14 +170,14 @@ const markets = [
     timezone: 'Europe/Rome',
     sessions: {
       preMarket: { open: '08:00', close: '09:00' },
-      regular:   { open: '09:00', close: '17:30' },
+      regular: { open: '09:00', close: '17:30' },
       afterHours: { open: '18:00', close: '20:30' },
     },
     tradingDays: [1, 2, 3, 4, 5],
   },
   {
     id: 'six_swiss',
-    name: 'SIX Swiss',
+    name: 'Swiss',
     shortName: 'SIX',
     country: 'Switzerland',
     countryCode: 'ch',
@@ -185,7 +185,7 @@ const markets = [
     timezone: 'Europe/Zurich',
     sessions: {
       preMarket: { open: '06:00', close: '09:00' },
-      regular:   { open: '09:00', close: '17:30' },
+      regular: { open: '09:00', close: '17:30' },
       afterHours: { open: '17:30', close: '17:40' },
     },
     tradingDays: [1, 2, 3, 4, 5],
@@ -203,7 +203,7 @@ const markets = [
     region: 'Asia-Pacific',
     timezone: 'Asia/Tokyo',
     sessions: {
-      regular:   { open: '09:00', close: '15:30' },
+      regular: { open: '09:00', close: '15:30' },
     },
     lunchBreak: { start: '11:30', end: '12:30' },
     tradingDays: [1, 2, 3, 4, 5],
@@ -246,7 +246,7 @@ const markets = [
     timezone: 'Asia/Hong_Kong',
     sessions: {
       preMarket: { open: '09:00', close: '09:30' },
-      regular:   { open: '09:30', close: '16:00' },
+      regular: { open: '09:30', close: '16:00' },
     },
     lunchBreak: { start: '12:00', end: '13:00' },
     tradingDays: [1, 2, 3, 4, 5],
@@ -261,7 +261,7 @@ const markets = [
     timezone: 'Asia/Seoul',
     sessions: {
       preMarket: { open: '08:30', close: '09:00' },
-      regular:   { open: '09:00', close: '15:30' },
+      regular: { open: '09:00', close: '15:30' },
       afterHours: { open: '15:40', close: '16:00' },
     },
     tradingDays: [1, 2, 3, 4, 5],
@@ -276,7 +276,7 @@ const markets = [
     timezone: 'Australia/Sydney',
     sessions: {
       preMarket: { open: '07:00', close: '10:00' },
-      regular:   { open: '10:00', close: '16:00' },
+      regular: { open: '10:00', close: '16:00' },
     },
     tradingDays: [1, 2, 3, 4, 5],
   },
@@ -290,7 +290,7 @@ const markets = [
     timezone: 'Asia/Kolkata',
     sessions: {
       preMarket: { open: '09:00', close: '09:15' },
-      regular:   { open: '09:15', close: '15:30' },
+      regular: { open: '09:15', close: '15:30' },
       afterHours: { open: '15:40', close: '16:00' },
     },
     tradingDays: [1, 2, 3, 4, 5],
@@ -305,7 +305,7 @@ const markets = [
     timezone: 'Asia/Singapore',
     sessions: {
       preMarket: { open: '08:30', close: '09:00' },
-      regular:   { open: '09:00', close: '17:00' },
+      regular: { open: '09:00', close: '17:00' },
     },
     tradingDays: [1, 2, 3, 4, 5],
   },
@@ -336,7 +336,7 @@ const markets = [
     timezone: 'Asia/Riyadh',
     sessions: {
       preMarket: { open: '09:30', close: '10:00' },
-      regular:   { open: '10:00', close: '15:00' },
+      regular: { open: '10:00', close: '15:00' },
     },
     tradingDays: [0, 1, 2, 3, 4], // Sun-Thu
   },
@@ -350,7 +350,7 @@ const markets = [
     timezone: 'Asia/Dubai',
     sessions: {
       preMarket: { open: '09:30', close: '10:00' },
-      regular:   { open: '10:00', close: '14:00' },
+      regular: { open: '10:00', close: '14:00' },
     },
     tradingDays: [1, 2, 3, 4, 5], // Mon-Fri
   },
@@ -364,7 +364,7 @@ const markets = [
     timezone: 'Asia/Jerusalem',
     sessions: {
       preMarket: { open: '09:00', close: '09:59' },
-      regular:   { open: '09:59', close: '17:15' },
+      regular: { open: '09:59', close: '17:15' },
     },
     tradingDays: [0, 1, 2, 3, 4], // Sun-Thu
   },
@@ -377,7 +377,7 @@ const markets = [
     region: 'Middle East',
     timezone: 'Europe/Istanbul',
     sessions: {
-      regular:  { open: '10:00', close: '18:00' },
+      regular: { open: '10:00', close: '18:00' },
     },
     lunchBreak: { start: '13:00', end: '14:00' },
     tradingDays: [1, 2, 3, 4, 5],
