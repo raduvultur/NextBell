@@ -205,6 +205,9 @@ export function createMarketCard(market) {
           <text x="100" y="176" class="clock__num">6</text>
           <text x="34" y="107" class="clock__num">9</text>
           
+          <!-- Day/Night Complication (above 6) -->
+          <g class="clock__day-night" transform="translate(100, 146)"></g>
+          
           <g class="clock__date-group">
             <text class="clock__date-day" x="134" y="93">--</text>
             <text class="clock__date-num" x="134" y="113">--</text>
@@ -322,6 +325,26 @@ export function updateMarketCard(card, market) {
     const dateNum = clockContainer.querySelector('.clock__date-num');
     if (dateDay) dateDay.textContent = tz.weekday;
     if (dateNum) dateNum.textContent = tz.day;
+
+    const dayNightEl = clockContainer.querySelector('.clock__day-night');
+    if (dayNightEl) {
+      const isDay = tz.hours >= 6 && tz.hours < 18;
+      const currentMode = dayNightEl.dataset.mode;
+      const targetMode = isDay ? 'day' : 'night';
+      if (currentMode !== targetMode) {
+        dayNightEl.dataset.mode = targetMode;
+        if (isDay) {
+          dayNightEl.innerHTML = `
+            <circle cx="0" cy="0" r="4.2" fill="#f59e0b" />
+            <path d="M0 -7v1.8 M0 5.2v1.8 M-7 0h1.8 M5.2 0h1.8 M-4.9 -4.9l1.3 1.3 M3.6 3.6l1.3 1.3 M-4.9 5.2l1.3 -1.3 M3.6 -3.6l1.3 -1.3" stroke="#f59e0b" stroke-width="1.2" stroke-linecap="round" />
+          `;
+        } else {
+          dayNightEl.innerHTML = `
+            <path d="M-2 -4 A 4.5 4.5 0 1 0 4 2 A 3.2 3.2 0 1 1 -2 -4 Z" fill="#818cf8" opacity="0.85" />
+          `;
+        }
+      }
+    }
   }
 
   return status;
