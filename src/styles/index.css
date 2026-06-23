@@ -483,7 +483,7 @@ body::before {
 }
 
 .card__name {
-  font-size: 0.95rem;
+  font-size: 1.2rem;
   font-weight: 700;
   color: var(--text-primary);
   white-space: nowrap;
@@ -1064,7 +1064,7 @@ body::before {
   }
 
   .card__name {
-    font-size: 0.85rem;
+    font-size: 1.0rem;
   }
 
   .card__countdown {
