@@ -1,6 +1,8 @@
 /**
  * Alert Manager — handles bell sounds and browser notifications
  * when a market transitions to "open" status.
+ * Uses the service worker registration for enhanced notifications
+ * with actions, icons, and vibration.
  */
 import { showToast } from './Toast.js';
 import { loadPrefs } from '../storage/preferences.js';
@@ -10,6 +12,7 @@ class AlertManager {
     this.audioContext = null;
     this.previousStatuses = {};
     this.hasInteracted = false;
+    this.swRegistration = null;
 
     // Listen for user interaction to unlock audio
     const unlock = () => {
@@ -19,6 +22,13 @@ class AlertManager {
     };
     document.addEventListener('click', unlock);
     document.addEventListener('keydown', unlock);
+  }
+
+  /**
+   * Set the service worker registration for notification use.
+   */
+  setRegistration(registration) {
+    this.swRegistration = registration;
   }
 
   /**
@@ -134,12 +144,32 @@ class AlertManager {
       duration: 8000,
     });
 
-    // Browser notification (if permitted)
+    // System notification via SW registration (enhanced) or fallback
     if ('Notification' in window && Notification.permission === 'granted') {
-      new Notification('🔔 Market Open', {
+      const notifOptions = {
         body: `${market.name} (${market.shortName}) is now open for trading!`,
-        icon: `https://flagcdn.com/w80/${market.countryCode}.png`,
-      });
+        icon: '/icons/icon-192x192.png',
+        badge: '/favicon.svg',
+        vibrate: [200, 100, 200],
+        tag: `market-open-${market.id}`,
+        renotify: true,
+        data: { url: '/' },
+      };
+
+      if (this.swRegistration) {
+        // Use SW registration for enhanced notification with actions
+        this.swRegistration.showNotification('🔔 Market Open', {
+          ...notifOptions,
+          actions: [
+            { action: 'view', title: 'View Dashboard' },
+          ],
+        }).catch(() => {
+          // Fallback to basic notification
+          new Notification('🔔 Market Open', notifOptions);
+        });
+      } else {
+        new Notification('🔔 Market Open', notifOptions);
+      }
     }
   }
 

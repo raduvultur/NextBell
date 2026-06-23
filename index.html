@@ -6,8 +6,52 @@
   <title>NextBell — Global Market Hours Dashboard</title>
   <meta name="description" content="Track market open/close hours for 25+ global stock exchanges with live countdown timers, drag-and-drop dashboard, and bell alerts." />
   <meta name="keywords" content="market hours, stock exchange, trading hours, NYSE, LSE, TSE, countdown timer, global markets" />
+
+  <!-- PWA Meta -->
   <meta name="theme-color" content="#0a0e1a" />
-  <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="NextBell" />
+
+  <!-- Favicon & Icons -->
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png" />
+
+  <!-- Resource Hints -->
+  <link rel="preconnect" href="https://flagcdn.com" />
+  <link rel="dns-prefetch" href="https://flagcdn.com" />
+
+  <!-- Font Preloads (critical path) -->
+  <link rel="preload" href="/fonts/inter-latin.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="preload" href="/fonts/jetbrains-mono-latin.woff2" as="font" type="font/woff2" crossorigin />
+
+  <!-- Critical CSS — prevents FOUC -->
+  <style>
+    @font-face {
+      font-family: 'Inter';
+      font-style: normal;
+      font-weight: 300 800;
+      font-display: swap;
+      src: url('/fonts/inter-latin.woff2') format('woff2');
+    }
+    @font-face {
+      font-family: 'JetBrains Mono';
+      font-style: normal;
+      font-weight: 400 700;
+      font-display: swap;
+      src: url('/fonts/jetbrains-mono-latin.woff2') format('woff2');
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { font-size: 16px; }
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: #0a0e1a;
+      color: #f1f5f9;
+      line-height: 1.5;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+  </style>
 </head>
 <body>
   <div id="app"></div>

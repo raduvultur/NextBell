@@ -1,19 +1,22 @@
 /**
  * NextBell — Main Application Entry Point
- * Orchestrates all components, the tick loop, and SortableJS.
+ * Orchestrates all components, the tick loop, SortableJS, and PWA features.
  */
 import './styles/index.css';
 import './styles/animations.css';
-import Sortable from 'sortablejs';
 import markets from './data/markets.js';
 import { createHeader, updateClocks } from './components/Header.js';
 import { createMarketCard, updateMarketCard } from './components/MarketCard.js';
 import { loadPrefs, saveCardOrder } from './storage/preferences.js';
 import alertManager from './components/AlertManager.js';
+import { createOfflineBanner } from './components/OfflineBanner.js';
+import { initInstallPrompt } from './components/InstallPrompt.js';
+import { showUpdateToast } from './components/UpdateToast.js';
 
 // ─── State ──────────────────────────────────────────────
 let cardElements = new Map(); // marketId → DOM element
 let sortableInstance = null;
+let Sortable = null; // Lazy-loaded
 
 // ─── Initialize ─────────────────────────────────────────
 function init() {
@@ -38,7 +41,7 @@ function init() {
   // Initial render
   renderCards();
 
-  // Initialize SortableJS
+  // Initialize SortableJS (lazy)
   initSortable();
 
   // Start tick loop
@@ -49,6 +52,11 @@ function init() {
   setTimeout(() => {
     alertManager.requestNotificationPermission();
   }, 5000);
+
+  // PWA features
+  createOfflineBanner();
+  initInstallPrompt();
+  registerServiceWorker();
 }
 
 // ─── Render Cards ───────────────────────────────────────
@@ -114,10 +122,21 @@ function renderCards() {
   updateAllCards();
 }
 
-// ─── Initialize SortableJS ──────────────────────────────
-function initSortable() {
+// ─── Initialize SortableJS (Lazy Loaded) ────────────────
+async function initSortable() {
   const grid = document.getElementById('market-grid');
   if (!grid) return;
+
+  // Lazy-load SortableJS on first call
+  if (!Sortable) {
+    try {
+      const module = await import('sortablejs');
+      Sortable = module.default;
+    } catch (e) {
+      console.warn('Failed to load SortableJS:', e);
+      return;
+    }
+  }
 
   if (sortableInstance) {
     sortableInstance.destroy();
@@ -159,6 +178,34 @@ function updateAllCards() {
   });
 
   return statuses;
+}
+
+// ─── Service Worker Registration ────────────────────────
+async function registerServiceWorker() {
+  if ('serviceWorker' in navigator) {
+    try {
+      const { registerSW } = await import('virtual:pwa-register');
+
+      const updateSW = registerSW({
+        onNeedRefresh() {
+          // A new version is available — show update toast
+          navigator.serviceWorker.ready.then((registration) => {
+            showUpdateToast(registration);
+          });
+        },
+        onOfflineReady() {
+          console.log('NextBell is ready to work offline');
+        },
+        onRegisteredSW(swUrl, registration) {
+          if (registration) {
+            alertManager.setRegistration(registration);
+          }
+        },
+      });
+    } catch (e) {
+      console.warn('PWA registration failed:', e);
+    }
+  }
 }
 
 // ─── Boot ───────────────────────────────────────────────

@@ -121,6 +121,7 @@ export function createMarketCard(market) {
           loading="lazy"
           width="32"
           height="20"
+          onerror="this.style.display='none';this.insertAdjacentHTML('afterend','<div class=\\'card__flag-fallback\\'>${market.countryCode.toUpperCase()}</div>')"
         />
         <div class="card__names">
           <h3 class="card__name">${market.name}</h3>
