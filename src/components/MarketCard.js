@@ -79,6 +79,32 @@ function getClockTicksSVG() {
 }
 
 /**
+ * Helper to calculate SVG circular arc path representing regular market hours.
+ */
+function getMarketOpenArcPath(regularOpen, regularClose) {
+  const [hOpen, mOpen] = regularOpen.split(':').map(Number);
+  const [hClose, mClose] = regularClose.split(':').map(Number);
+
+  const tOpen = (hOpen % 12) + mOpen / 60;
+  const tClose = (hClose % 12) + mClose / 60;
+
+  const thetaStart = (tOpen / 12) * 2 * Math.PI - Math.PI / 2;
+  const thetaEnd = (tClose / 12) * 2 * Math.PI - Math.PI / 2;
+
+  const r = 81; // Radius just inside the hour ticks
+  const x1 = (100 + r * Math.cos(thetaStart)).toFixed(2);
+  const y1 = (100 + r * Math.sin(thetaStart)).toFixed(2);
+  const x2 = (100 + r * Math.cos(thetaEnd)).toFixed(2);
+  const y2 = (100 + r * Math.sin(thetaEnd)).toFixed(2);
+
+  let delta = (tClose - tOpen) * 30;
+  if (delta < 0) delta += 360;
+
+  const largeArcFlag = delta > 180 ? 1 : 0;
+  return `M ${x1} ${y1} A ${r} ${r} 0 ${largeArcFlag} 1 ${x2} ${y2}`;
+}
+
+/**
  * Create a market card DOM element.
  */
 export function createMarketCard(market) {
@@ -197,6 +223,7 @@ export function createMarketCard(market) {
       <div class="card__analog-clock-wrapper">
         <svg class="analog-clock" viewBox="0 0 200 200" width="165" height="165">
           <rect x="5" y="5" width="190" height="190" rx="46" ry="46" class="clock__face" />
+          <path class="clock__open-arc" d="" fill="none" />
           <g class="clock__ticks">
             ${getClockTicksSVG()}
           </g>
@@ -326,9 +353,11 @@ export function updateMarketCard(card, market) {
     if (dateDay) dateDay.textContent = tz.weekday;
     if (dateNum) dateNum.textContent = tz.day;
 
+    const isDay = tz.hours >= 6 && tz.hours < 18;
+
+    // Update daytime/nighttime complication
     const dayNightEl = clockContainer.querySelector('.clock__day-night');
     if (dayNightEl) {
-      const isDay = tz.hours >= 6 && tz.hours < 18;
       const currentMode = dayNightEl.dataset.mode;
       const targetMode = isDay ? 'day' : 'night';
       if (currentMode !== targetMode) {
@@ -343,6 +372,21 @@ export function updateMarketCard(card, market) {
             <path d="M-2 -4 A 4.5 4.5 0 1 0 4 2 A 3.2 3.2 0 1 1 -2 -4 Z" fill="#818cf8" opacity="0.85" />
           `;
         }
+      }
+    }
+
+    // Update glowing market open hours arc
+    const openArc = clockContainer.querySelector('.clock__open-arc');
+    if (openArc) {
+      if (isDay) {
+        const regularOpen = market.sessions.regular.open;
+        const regularClose = market.sessions.regular.close;
+        const path = getMarketOpenArcPath(regularOpen, regularClose);
+        openArc.setAttribute('d', path);
+        openArc.classList.add('clock__open-arc--visible');
+      } else {
+        openArc.setAttribute('d', '');
+        openArc.classList.remove('clock__open-arc--visible');
       }
     }
   }

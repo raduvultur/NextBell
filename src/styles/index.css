@@ -1425,3 +1425,16 @@ body::before {
   stroke: #ef4444;
   stroke-width: 1.2px;
 }
+
+.clock__open-arc {
+  stroke: transparent;
+  stroke-width: 3.5px;
+  opacity: 0;
+  transition: opacity var(--transition-slow), stroke var(--transition-fast);
+}
+
+.clock__open-arc--visible {
+  stroke: var(--color-open); /* Glowing green */
+  opacity: 0.45;
+  filter: drop-shadow(0 0 2px var(--color-open-glow));
+}
