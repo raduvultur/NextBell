@@ -1394,10 +1394,12 @@ body::before {
   text-anchor: middle;
 }
 
-.clock__hand {
-  transform-origin: 50% 50%;
-  transform-box: view-box;
+.clock__hand-group {
   transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.clock__hand-group--second {
+  transition: transform 0.1s cubic-bezier(0.175, 0.885, 0.32, 1.275); /* Bouncy second hand spring transition */
 }
 
 .clock__hand--hour {
@@ -1416,7 +1418,6 @@ body::before {
   stroke: #ef4444; /* High-visibility second hand */
   stroke-width: 1.5px;
   stroke-linecap: round;
-  transition: transform 0.1s cubic-bezier(0.175, 0.885, 0.32, 1.275); /* Bouncy watch-tick spring transition */
 }
 
 .clock__pin {

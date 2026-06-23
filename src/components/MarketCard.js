@@ -210,9 +210,15 @@ export function createMarketCard(market) {
             <text class="clock__date-num" x="134" y="113">--</text>
           </g>
 
-          <line class="clock__hand clock__hand--hour" x1="100" y1="100" x2="100" y2="62" stroke-linecap="round" />
-          <line class="clock__hand clock__hand--minute" x1="100" y1="100" x2="100" y2="44" stroke-linecap="round" />
-          <line class="clock__hand clock__hand--second" x1="100" y1="112" x2="100" y2="30" stroke-linecap="round" />
+          <g class="clock__hand-group clock__hand-group--hour">
+            <line class="clock__hand clock__hand--hour" x1="100" y1="100" x2="100" y2="62" stroke-linecap="round" />
+          </g>
+          <g class="clock__hand-group clock__hand-group--minute">
+            <line class="clock__hand clock__hand--minute" x1="100" y1="100" x2="100" y2="44" stroke-linecap="round" />
+          </g>
+          <g class="clock__hand-group clock__hand-group--second">
+            <line class="clock__hand clock__hand--second" x1="100" y1="112" x2="100" y2="30" stroke-linecap="round" />
+          </g>
           <circle cx="100" cy="100" r="3.5" class="clock__pin" />
         </svg>
       </div>
@@ -304,9 +310,9 @@ export function updateMarketCard(card, market) {
     const minDeg = (6 * tz.minutes + tz.seconds / 10).toFixed(1);
     const secDeg = (6 * tz.seconds).toFixed(1);
 
-    const hourHand = clockContainer.querySelector('.clock__hand--hour');
-    const minHand = clockContainer.querySelector('.clock__hand--minute');
-    const secHand = clockContainer.querySelector('.clock__hand--second');
+    const hourHand = clockContainer.querySelector('.clock__hand-group--hour');
+    const minHand = clockContainer.querySelector('.clock__hand-group--minute');
+    const secHand = clockContainer.querySelector('.clock__hand-group--second');
 
     if (hourHand) hourHand.setAttribute('transform', `rotate(${hourDeg} 100 100)`);
     if (minHand) minHand.setAttribute('transform', `rotate(${minDeg} 100 100)`);
