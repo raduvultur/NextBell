@@ -23,6 +23,10 @@ function init() {
   const app = document.getElementById('app');
   app.innerHTML = '';
 
+  // Set initial clock mode class on body
+  const prefs = loadPrefs();
+  document.body.classList.toggle('mode--analog-clock', !!prefs.analogClockMode);
+
   // Create header
   const header = createHeader(renderCards);
   app.appendChild(header);

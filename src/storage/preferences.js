@@ -12,6 +12,7 @@ const DEFAULT_PREFS = {
   groupBy: 'region', // 'region' | 'none'
   searchQuery: '',
   regionFilter: 'all',
+  analogClockMode: false,
 };
 
 /**
@@ -80,4 +81,14 @@ export function toggleCardVisibility(marketId) {
  */
 export function saveCardOrder(orderArray) {
   return updatePref('cardOrder', orderArray);
+}
+
+/**
+ * Toggle analog clock mode.
+ */
+export function toggleAnalogClockMode() {
+  const prefs = loadPrefs();
+  prefs.analogClockMode = !prefs.analogClockMode;
+  savePrefs(prefs);
+  return prefs.analogClockMode;
 }

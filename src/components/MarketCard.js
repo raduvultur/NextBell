@@ -2,7 +2,7 @@
  * MarketCard component — renders a single market tile with
  * countdown, progress bar, session info, and bell toggle.
  */
-import { getMarketStatus } from '../engine/marketStatus.js';
+import { getMarketStatus, getNowInTimezone } from '../engine/marketStatus.js';
 import { formatCountdown, exchangeTimeToLocal } from '../engine/countdown.js';
 import { loadPrefs, toggleBellAlert } from '../storage/preferences.js';
 
@@ -53,6 +53,30 @@ const STATUS_CONFIG = {
     borderClass: 'card--weekend',
   },
 };
+
+/**
+ * Helper to generate modern analog clock ticks SVG.
+ */
+function getClockTicksSVG() {
+  let ticksHtml = '';
+  for (let i = 0; i < 60; i++) {
+    if (i % 15 === 0) continue; // Skip 12, 3, 6, 9 to avoid overlapping text
+    const angle = (i * 6 * Math.PI) / 180;
+    const isHour = i % 5 === 0;
+    const rStart = 85;
+    const rEnd = isHour ? 75 : 80;
+    const color = isHour ? 'rgba(255, 255, 255, 0.85)' : 'rgba(148, 163, 184, 0.25)';
+    const width = isHour ? 2 : 1.2;
+
+    const x1 = (100 + rStart * Math.sin(angle)).toFixed(2);
+    const y1 = (100 - rStart * Math.cos(angle)).toFixed(2);
+    const x2 = (100 + rEnd * Math.sin(angle)).toFixed(2);
+    const y2 = (100 - rEnd * Math.cos(angle)).toFixed(2);
+
+    ticksHtml += `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="${color}" stroke-width="${width}" stroke-linecap="round" />`;
+  }
+  return ticksHtml;
+}
 
 /**
  * Create a market card DOM element.
@@ -167,6 +191,32 @@ export function createMarketCard(market) {
       </div>
       ${extendedInfo}
     </div>
+
+    <!-- Modern Analog Clock -->
+    <div class="card__analog-clock-container">
+      <div class="card__analog-clock-wrapper">
+        <svg class="analog-clock" viewBox="0 0 200 200" width="165" height="165">
+          <rect x="5" y="5" width="190" height="190" rx="46" ry="46" class="clock__face" />
+          <g class="clock__ticks">
+            ${getClockTicksSVG()}
+          </g>
+          <text x="100" y="38" class="clock__num">12</text>
+          <text x="166" y="107" class="clock__num">3</text>
+          <text x="100" y="176" class="clock__num">6</text>
+          <text x="34" y="107" class="clock__num">9</text>
+          
+          <g class="clock__date-group">
+            <text class="clock__date-day" x="134" y="93">--</text>
+            <text class="clock__date-num" x="134" y="113">--</text>
+          </g>
+
+          <line class="clock__hand clock__hand--hour" x1="100" y1="100" x2="100" y2="62" stroke-linecap="round" />
+          <line class="clock__hand clock__hand--minute" x1="100" y1="100" x2="100" y2="44" stroke-linecap="round" />
+          <line class="clock__hand clock__hand--second" x1="100" y1="112" x2="100" y2="30" stroke-linecap="round" />
+          <circle cx="100" cy="100" r="3.5" class="clock__pin" />
+        </svg>
+      </div>
+    </div>
   `;
 
   // Bell button handler
@@ -243,6 +293,29 @@ export function updateMarketCard(card, market) {
     if (status.status === 'open') {
       progressDot.classList.add('card__progress-dot--active');
     }
+  }
+
+  // Update analog clock hands & date in real time
+  const clockContainer = card.querySelector('.card__analog-clock-container');
+  if (clockContainer) {
+    const tz = getNowInTimezone(market.timezone);
+    
+    const hourDeg = (30 * (tz.hours % 12) + tz.minutes / 2).toFixed(1);
+    const minDeg = (6 * tz.minutes + tz.seconds / 10).toFixed(1);
+    const secDeg = (6 * tz.seconds).toFixed(1);
+
+    const hourHand = clockContainer.querySelector('.clock__hand--hour');
+    const minHand = clockContainer.querySelector('.clock__hand--minute');
+    const secHand = clockContainer.querySelector('.clock__hand--second');
+
+    if (hourHand) hourHand.setAttribute('transform', `rotate(${hourDeg} 100 100)`);
+    if (minHand) minHand.setAttribute('transform', `rotate(${minDeg} 100 100)`);
+    if (secHand) secHand.setAttribute('transform', `rotate(${secDeg} 100 100)`);
+
+    const dateDay = clockContainer.querySelector('.clock__date-day');
+    const dateNum = clockContainer.querySelector('.clock__date-num');
+    if (dateDay) dateDay.textContent = tz.weekday;
+    if (dateNum) dateNum.textContent = tz.day;
   }
 
   return status;

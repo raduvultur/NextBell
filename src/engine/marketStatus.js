@@ -38,8 +38,10 @@ export function getNowInTimezone(timezone, now = new Date()) {
   const dayMap = { Sun: 0, Mon: 1, Tue: 2, Wed: 3, Thu: 4, Fri: 5, Sat: 6 };
   const dayOfWeek = dayMap[parts.weekday];
   const dateStr = `${parts.year}-${parts.month}-${parts.day}`;
+  const weekday = parts.weekday.toUpperCase();
+  const day = parts.day;
 
-  return { hours, minutes, seconds, dayOfWeek, dateStr, totalMinutes: hours * 60 + minutes };
+  return { hours, minutes, seconds, dayOfWeek, dateStr, weekday, day, totalMinutes: hours * 60 + minutes };
 }
 
 /**

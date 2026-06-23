@@ -1279,3 +1279,147 @@ body::before {
   flex-shrink: 0;
   margin-top: 2px;
 }
+
+/* ═══════════════════════════════════════════════════════
+   CLOCK MODE TOGGLE BUTTON
+   ═══════════════════════════════════════════════════════ */
+.clock-toggle-btn {
+  width: 38px;
+  height: 38px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-md);
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.clock-toggle-btn svg {
+  width: 18px;
+  height: 18px;
+}
+
+.clock-toggle-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: var(--border-hover);
+  color: var(--text-primary);
+}
+
+.clock-toggle-btn--active {
+  background: rgba(245, 158, 11, 0.15);
+  border-color: rgba(245, 158, 11, 0.4);
+  color: var(--color-pre-market);
+}
+
+.clock-toggle-btn--active:hover {
+  background: rgba(245, 158, 11, 0.2);
+  border-color: rgba(245, 158, 11, 0.6);
+  color: var(--color-pre-market);
+}
+
+/* ═══════════════════════════════════════════════════════
+   ANALOG CLOCK STYLING
+   ═══════════════════════════════════════════════════════ */
+.card__analog-clock-container {
+  display: none;
+}
+
+/* Hide standard layout in analog mode */
+.mode--analog-clock .card__countdown-section,
+.mode--analog-clock .card__progress-container,
+.mode--analog-clock .card__sessions {
+  display: none !important;
+}
+
+/* Show analog clock in analog mode */
+.mode--analog-clock .card__analog-clock-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: var(--space-md) 0 var(--space-sm);
+  min-height: 180px;
+}
+
+.card__analog-clock-wrapper {
+  position: relative;
+  width: 165px;
+  height: 165px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.analog-clock {
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+.clock__face {
+  fill: #060813; /* Deep premium contrast space fill */
+  stroke: rgba(255, 255, 255, 0.05);
+  stroke-width: 1.5px;
+}
+
+.clock__num {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 20px;
+  font-weight: 600;
+  fill: var(--text-primary);
+  text-anchor: middle;
+  dominant-baseline: central;
+}
+
+.clock__date-group {
+  user-select: none;
+}
+
+.clock__date-day {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  fill: var(--text-muted);
+  text-anchor: middle;
+  letter-spacing: 0.5px;
+}
+
+.clock__date-num {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 18px;
+  font-weight: 700;
+  fill: var(--text-primary);
+  text-anchor: middle;
+}
+
+.clock__hand {
+  transform-origin: 100px 100px;
+  transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.clock__hand--hour {
+  stroke: #ffffff;
+  stroke-width: 5.5px;
+  stroke-linecap: round;
+}
+
+.clock__hand--minute {
+  stroke: #0ea5e9; /* Premium electric blue */
+  stroke-width: 4.5px;
+  stroke-linecap: round;
+}
+
+.clock__hand--second {
+  stroke: #ef4444; /* High-visibility second hand */
+  stroke-width: 1.5px;
+  stroke-linecap: round;
+  transition: transform 0.1s cubic-bezier(0.175, 0.885, 0.32, 1.275); /* Bouncy watch-tick spring transition */
+}
+
+.clock__pin {
+  fill: #ffffff;
+  stroke: #ef4444;
+  stroke-width: 1.2px;
+}
