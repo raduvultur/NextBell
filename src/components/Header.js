@@ -8,6 +8,7 @@ import markets from '../data/markets.js';
  * Create the header element.
  */
 export function createHeader(onFilterChange) {
+  const prefs = loadPrefs();
   const header = document.createElement('header');
   header.className = 'app-header';
   header.id = 'app-header';
@@ -120,7 +121,6 @@ export function createHeader(onFilterChange) {
   });
 
   // Restore saved filter values
-  const prefs = loadPrefs();
   if (prefs.searchQuery) searchInput.value = prefs.searchQuery;
   if (prefs.regionFilter) regionFilter.value = prefs.regionFilter;
 
