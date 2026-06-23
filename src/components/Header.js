@@ -1,7 +1,7 @@
 /**
  * Header component — top bar with branding, clock, search, and filters.
  */
-import { loadPrefs, updatePref, toggleCardVisibility, toggleAnalogClockMode } from '../storage/preferences.js';
+import { loadPrefs, updatePref, toggleCardVisibility, toggleAnalogClockMode, toggleHeaderCollapsed } from '../storage/preferences.js';
 import markets from '../data/markets.js';
 
 /**
@@ -89,6 +89,12 @@ export function createHeader(onFilterChange) {
         </button>
       </div>
     </div>
+
+    <button id="header-collapse-btn" class="header-collapse-btn" title="${prefs.headerCollapsed ? 'Expand header' : 'Collapse header'}" aria-label="Toggle header collapse">
+      <svg class="collapse-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="18 15 12 9 6 15"/>
+      </svg>
+    </button>
   `;
 
   // Search handler
@@ -112,6 +118,14 @@ export function createHeader(onFilterChange) {
     const isClockMode = toggleAnalogClockMode();
     clockToggleBtn.classList.toggle('clock-toggle-btn--active', isClockMode);
     document.body.classList.toggle('mode--analog-clock', isClockMode);
+  });
+
+  // Collapse toggle handler
+  const collapseBtn = header.querySelector('#header-collapse-btn');
+  collapseBtn.addEventListener('click', () => {
+    const isCollapsed = toggleHeaderCollapsed();
+    collapseBtn.title = isCollapsed ? 'Expand header' : 'Collapse header';
+    document.body.classList.toggle('mode--header-collapsed', isCollapsed);
   });
 
   // Manage button handler

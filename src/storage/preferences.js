@@ -13,6 +13,7 @@ const DEFAULT_PREFS = {
   searchQuery: '',
   regionFilter: 'all',
   analogClockMode: false,
+  headerCollapsed: false,
 };
 
 /**
@@ -91,4 +92,14 @@ export function toggleAnalogClockMode() {
   prefs.analogClockMode = !prefs.analogClockMode;
   savePrefs(prefs);
   return prefs.analogClockMode;
+}
+
+/**
+ * Toggle header collapsed mode.
+ */
+export function toggleHeaderCollapsed() {
+  const prefs = loadPrefs();
+  prefs.headerCollapsed = !prefs.headerCollapsed;
+  savePrefs(prefs);
+  return prefs.headerCollapsed;
 }

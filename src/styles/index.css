@@ -140,6 +140,16 @@ body::before {
   backdrop-filter: blur(20px) saturate(1.5);
   -webkit-backdrop-filter: blur(20px) saturate(1.5);
   border-bottom: 1px solid var(--border-default);
+  max-height: 200px;
+  overflow: visible;
+  transition: max-height var(--transition-slow) cubic-bezier(0.16, 1, 0.3, 1),
+              border-color var(--transition-slow) cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.mode--header-collapsed .app-header {
+  max-height: 0px !important;
+  border-bottom-color: transparent;
+  pointer-events: none;
 }
 
 .header__inner {
@@ -150,6 +160,13 @@ body::before {
   align-items: center;
   justify-content: space-between;
   gap: var(--space-lg);
+  transition: opacity 0.25s ease, transform var(--transition-slow) cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.mode--header-collapsed .header__inner {
+  opacity: 0;
+  transform: translateY(-30px);
+  pointer-events: none;
 }
 
 .header__brand {
@@ -1437,4 +1454,64 @@ body::before {
   stroke: var(--color-open); /* Glowing green */
   opacity: 0.45;
   filter: drop-shadow(0 0 2px var(--color-open-glow));
+}
+
+/* ═══════════════════════════════════════════════════════
+   HEADER COLLAPSE BUTTON
+   ═══════════════════════════════════════════════════════ */
+.header-collapse-btn {
+  position: absolute;
+  bottom: -20px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 48px;
+  height: 20px;
+  background: rgba(20, 27, 45, 0.95);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--border-default);
+  border-top: none;
+  border-radius: 0 0 var(--radius-md) var(--radius-md);
+  color: var(--text-secondary);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 101;
+  transition: all var(--transition-fast) cubic-bezier(0.16, 1, 0.3, 1);
+  pointer-events: auto;
+}
+
+.header-collapse-btn:hover {
+  background: var(--bg-card-hover);
+  color: var(--text-primary);
+  height: 24px;
+  bottom: -24px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.collapse-icon {
+  width: 14px;
+  height: 14px;
+  transition: transform var(--transition-slow) cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.mode--header-collapsed .collapse-icon {
+  transform: rotate(180deg);
+}
+
+.mode--header-collapsed .header-collapse-btn {
+  position: fixed;
+  top: 0;
+  bottom: auto;
+  border-top: none;
+  border-bottom: 1px solid var(--border-default);
+  border-radius: 0 0 var(--radius-md) var(--radius-md);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+}
+
+.mode--header-collapsed .header-collapse-btn:hover {
+  height: 24px;
+  top: 0;
+  bottom: auto;
 }
