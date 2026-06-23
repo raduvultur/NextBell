@@ -11,7 +11,7 @@ const markets = [
   // ═══════════════════════════════════════════════════════
   {
     id: 'nyse',
-    name: 'New York Stock Exchange',
+    name: 'New York',
     shortName: 'NYSE',
     country: 'United States',
     countryCode: 'us',
@@ -41,7 +41,7 @@ const markets = [
   },
   {
     id: 'tsx',
-    name: 'Toronto Stock Exchange',
+    name: 'Toronto',
     shortName: 'TSX',
     country: 'Canada',
     countryCode: 'ca',
@@ -88,7 +88,7 @@ const markets = [
   // ═══════════════════════════════════════════════════════
   {
     id: 'lse',
-    name: 'London Stock Exchange',
+    name: 'London',
     shortName: 'LSE',
     country: 'United Kingdom',
     countryCode: 'gb',
@@ -103,7 +103,7 @@ const markets = [
   },
   {
     id: 'xetra',
-    name: 'Frankfurt Stock Exchange',
+    name: 'Frankfurt',
     shortName: 'XETRA',
     country: 'Germany',
     countryCode: 'de',
@@ -177,7 +177,7 @@ const markets = [
   },
   {
     id: 'six_swiss',
-    name: 'SIX Swiss Exchange',
+    name: 'SIX Swiss',
     shortName: 'SIX',
     country: 'Switzerland',
     countryCode: 'ch',
@@ -196,7 +196,7 @@ const markets = [
   // ═══════════════════════════════════════════════════════
   {
     id: 'tse',
-    name: 'Tokyo Stock Exchange',
+    name: 'Tokyo',
     shortName: 'TSE',
     country: 'Japan',
     countryCode: 'jp',
@@ -210,7 +210,7 @@ const markets = [
   },
   {
     id: 'sse',
-    name: 'Shanghai Stock Exchange',
+    name: 'Shanghai',
     shortName: 'SSE',
     country: 'China',
     countryCode: 'cn',
@@ -224,7 +224,7 @@ const markets = [
   },
   {
     id: 'szse',
-    name: 'Shenzhen Stock Exchange',
+    name: 'Shenzhen',
     shortName: 'SZSE',
     country: 'China',
     countryCode: 'cn',
@@ -238,7 +238,7 @@ const markets = [
   },
   {
     id: 'hkex',
-    name: 'Hong Kong Stock Exchange',
+    name: 'Hong Kong',
     shortName: 'HKEX',
     country: 'Hong Kong',
     countryCode: 'hk',
@@ -253,7 +253,7 @@ const markets = [
   },
   {
     id: 'krx',
-    name: 'Korea Exchange',
+    name: 'Korea',
     shortName: 'KRX',
     country: 'South Korea',
     countryCode: 'kr',
@@ -268,7 +268,7 @@ const markets = [
   },
   {
     id: 'asx',
-    name: 'Australian Securities Exchange',
+    name: 'Australian Securities',
     shortName: 'ASX',
     country: 'Australia',
     countryCode: 'au',
@@ -282,7 +282,7 @@ const markets = [
   },
   {
     id: 'nse',
-    name: 'National Stock Exchange',
+    name: 'National',
     shortName: 'NSE',
     country: 'India',
     countryCode: 'in',
@@ -297,7 +297,7 @@ const markets = [
   },
   {
     id: 'sgx',
-    name: 'Singapore Exchange',
+    name: 'Singapore',
     shortName: 'SGX',
     country: 'Singapore',
     countryCode: 'sg',
@@ -311,7 +311,7 @@ const markets = [
   },
   {
     id: 'twse',
-    name: 'Taiwan Stock Exchange',
+    name: 'Taiwan',
     shortName: 'TWSE',
     country: 'Taiwan',
     countryCode: 'tw',
@@ -328,7 +328,7 @@ const markets = [
   // ═══════════════════════════════════════════════════════
   {
     id: 'tadawul',
-    name: 'Saudi Stock Exchange',
+    name: 'Saudi',
     shortName: 'Tadawul',
     country: 'Saudi Arabia',
     countryCode: 'sa',
@@ -356,7 +356,7 @@ const markets = [
   },
   {
     id: 'tase',
-    name: 'Tel Aviv Stock Exchange',
+    name: 'Tel Aviv',
     shortName: 'TASE',
     country: 'Israel',
     countryCode: 'il',
@@ -388,7 +388,7 @@ const markets = [
   // ═══════════════════════════════════════════════════════
   {
     id: 'jse',
-    name: 'Johannesburg Stock Exchange',
+    name: 'Johannesburg',
     shortName: 'JSE',
     country: 'South Africa',
     countryCode: 'za',
@@ -401,7 +401,7 @@ const markets = [
   },
   {
     id: 'ngx',
-    name: 'Nigerian Exchange',
+    name: 'Nigerian',
     shortName: 'NGX',
     country: 'Nigeria',
     countryCode: 'ng',
