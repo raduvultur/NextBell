@@ -32,14 +32,24 @@ export function getNowInTimezone(timezone, now = new Date()) {
     parts[type] = value;
   });
 
-  const hours = parseInt(parts.hour, 10);
-  const minutes = parseInt(parts.minute, 10);
-  const seconds = parseInt(parts.second, 10);
+  // Extract and clean numeric parts robustly (stripping any LTR/RTL marks)
+  const cleanInt = (str) => parseInt(str ? str.replace(/\D/g, '') : '0', 10);
+  const cleanStr = (str) => str ? str.replace(/[^\w-]/g, '') : '';
+
+  const hours = cleanInt(parts.hour);
+  const minutes = cleanInt(parts.minute);
+  const seconds = now.getSeconds(); // Use system seconds directly for timezone-independent accuracy
+
   const dayMap = { Sun: 0, Mon: 1, Tue: 2, Wed: 3, Thu: 4, Fri: 5, Sat: 6 };
-  const dayOfWeek = dayMap[parts.weekday];
-  const dateStr = `${parts.year}-${parts.month}-${parts.day}`;
-  const weekday = parts.weekday.toUpperCase();
-  const day = parts.day;
+  const dayOfWeek = dayMap[cleanStr(parts.weekday)];
+  
+  const cleanYear = cleanStr(parts.year);
+  const cleanMonth = cleanStr(parts.month);
+  const cleanDay = cleanStr(parts.day);
+  const dateStr = `${cleanYear}-${cleanMonth}-${cleanDay}`;
+  
+  const weekday = cleanStr(parts.weekday).toUpperCase();
+  const day = cleanDay;
 
   return { hours, minutes, seconds, dayOfWeek, dateStr, weekday, day, totalMinutes: hours * 60 + minutes };
 }

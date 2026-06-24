@@ -14,6 +14,7 @@ const DEFAULT_PREFS = {
   regionFilter: 'all',
   analogClockMode: false,
   headerCollapsed: false,
+  flippedCards: [], // list of flipped card IDs
 };
 
 /**
@@ -102,4 +103,20 @@ export function toggleHeaderCollapsed() {
   prefs.headerCollapsed = !prefs.headerCollapsed;
   savePrefs(prefs);
   return prefs.headerCollapsed;
+}
+
+/**
+ * Toggle individual card flipped state.
+ */
+export function toggleCardFlipped(marketId) {
+  const prefs = loadPrefs();
+  if (!prefs.flippedCards) prefs.flippedCards = [];
+  const idx = prefs.flippedCards.indexOf(marketId);
+  if (idx === -1) {
+    prefs.flippedCards.push(marketId);
+  } else {
+    prefs.flippedCards.splice(idx, 1);
+  }
+  savePrefs(prefs);
+  return prefs.flippedCards.includes(marketId);
 }

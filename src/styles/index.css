@@ -376,19 +376,40 @@ body::before {
    ═══════════════════════════════════════════════════════ */
 .market-card {
   position: relative;
+  height: 380px;
+  perspective: 1000px;
+  cursor: pointer;
+  content-visibility: auto;
+  contain-intrinsic-size: auto 380px;
+  translate: 0 0;
+  transition: translate var(--transition-base);
+}
+
+.market-card__inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+  transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.market-card__face {
+  position: absolute;
+  inset: 0;
   background: var(--bg-card);
   border: 1px solid var(--border-default);
   border-radius: var(--radius-xl);
   padding: var(--space-lg);
-  transition: all var(--transition-base);
-  box-shadow: var(--shadow-card);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden; /* Safari */
+  display: flex;
+  flex-direction: column;
   overflow: hidden;
-  cursor: default;
-  content-visibility: auto;
-  contain-intrinsic-size: auto 280px;
+  box-shadow: var(--shadow-card);
+  transition: border-color var(--transition-base), box-shadow var(--transition-base), opacity var(--transition-base);
 }
 
-.market-card::before {
+.market-card__face::before {
   content: '';
   position: absolute;
   inset: 0;
@@ -397,46 +418,76 @@ body::before {
   pointer-events: none;
 }
 
-.market-card:hover {
-  border-color: var(--border-hover);
-  box-shadow: var(--shadow-card-hover);
-  transform: translateY(-2px);
+.market-card__face--front {
+  z-index: 2;
+  transform: rotateY(0deg);
 }
 
-/* Status border/glow variants */
-.card--open {
+.market-card__face--back {
+  transform: rotateY(180deg);
+}
+
+/* Hover effects */
+.market-card:hover {
+  translate: 0 -2px;
+}
+
+.market-card:hover .market-card__face {
+  border-color: var(--border-hover);
+  box-shadow: var(--shadow-card-hover);
+}
+
+/* ─── XOR Card Flip Logic ─── */
+/* Standard Mode (default) */
+.market-card .market-card__inner {
+  transform: rotateY(0deg);
+}
+.market-card.market-card--flipped .market-card__inner {
+  transform: rotateY(180deg);
+}
+
+/* Analog Clock Mode (global toggle active) */
+.mode--analog-clock .market-card .market-card__inner {
+  transform: rotateY(180deg);
+}
+.mode--analog-clock .market-card.market-card--flipped .market-card__inner {
+  transform: rotateY(0deg);
+}
+
+/* Status border/glow variants targeting front/back faces */
+.card--open .market-card__face {
   border-color: var(--color-open-border);
   background: linear-gradient(135deg, var(--bg-card), var(--color-open-bg));
   box-shadow: var(--shadow-card), var(--shadow-glow-open);
 }
 
-.card--pre-market {
+.card--pre-market .market-card__face {
   border-color: var(--color-pre-market-border);
   background: linear-gradient(135deg, var(--bg-card), var(--color-pre-market-bg));
   box-shadow: var(--shadow-card), var(--shadow-glow-pre);
 }
 
-.card--after-hours {
+.card--after-hours .market-card__face {
   border-color: var(--color-after-hours-border);
   background: linear-gradient(135deg, var(--bg-card), var(--color-after-hours-bg));
   box-shadow: var(--shadow-card), var(--shadow-glow-after);
 }
 
-.card--lunch-break {
+.card--lunch-break .market-card__face {
   border-color: var(--color-lunch-break-border);
   background: linear-gradient(135deg, var(--bg-card), var(--color-lunch-break-bg));
 }
 
-.card--closed {
+.card--closed .market-card__face {
   border-color: var(--color-closed-border);
   opacity: 0.85;
 }
 
-.card--holiday {
+.card--holiday .market-card__face {
   border-color: rgba(239, 68, 68, 0.2);
 }
 
-.card--weekend {
+.card--weekend .market-card__face {
   border-color: var(--color-closed-border);
   opacity: 0.7;
 }
@@ -1341,29 +1392,20 @@ body::before {
    ANALOG CLOCK STYLING
    ═══════════════════════════════════════════════════════ */
 .card__analog-clock-container {
-  display: none;
-}
-
-/* Hide standard layout in analog mode */
-.mode--analog-clock .card__countdown-section,
-.mode--analog-clock .card__progress-container,
-.mode--analog-clock .card__sessions {
-  display: none !important;
-}
-
-/* Show analog clock in analog mode */
-.mode--analog-clock .card__analog-clock-container {
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: var(--space-md) 0 var(--space-sm);
-  min-height: 180px;
+  padding: 0;
+  flex-grow: 1;
+  min-height: 0;
 }
 
 .card__analog-clock-wrapper {
   position: relative;
-  width: 165px;
-  height: 165px;
+  width: 100%;
+  height: 100%;
+  max-height: 260px;
+  aspect-ratio: 1 / 1;
   display: flex;
   justify-content: center;
   align-items: center;

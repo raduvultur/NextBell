@@ -4,7 +4,7 @@
  */
 import { getMarketStatus, getNowInTimezone } from '../engine/marketStatus.js';
 import { formatCountdown, exchangeTimeToLocal } from '../engine/countdown.js';
-import { loadPrefs, toggleBellAlert } from '../storage/preferences.js';
+import { loadPrefs, toggleBellAlert, toggleCardFlipped } from '../storage/preferences.js';
 
 /**
  * Status configuration — colors, labels, icons.
@@ -150,7 +150,14 @@ export function createMarketCard(market) {
   const prefs = loadPrefs();
   const bellActive = prefs.bellAlerts[market.id] || false;
 
-  card.innerHTML = `
+  // Set initial flipped class if in preferences
+  const isFlipped = prefs.flippedCards && prefs.flippedCards.includes(market.id);
+  if (isFlipped) {
+    card.classList.add('market-card--flipped');
+  }
+
+  // Shared header template used on both faces
+  const headerHtml = `
     <div class="card__drag-handle" title="Drag to reorder">
       <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
         <circle cx="4" cy="3" r="1.5"/>
@@ -194,89 +201,117 @@ export function createMarketCard(market) {
         <span class="card__badge" data-status-badge>—</span>
       </div>
     </div>
+  `;
 
-    <div class="card__countdown-section">
-      <div class="card__countdown-label" data-countdown-label>—</div>
-      <div class="card__countdown" data-countdown>00:00:00</div>
-    </div>
+  card.innerHTML = `
+    <div class="market-card__inner">
+      <!-- Front Face (Info) -->
+      <div class="market-card__face market-card__face--front">
+        ${headerHtml}
 
-    <div class="card__progress-container">
-      <div class="card__progress-track">
-        <div class="card__progress-fill" data-progress-fill style="width: 0%"></div>
-        <div class="card__progress-dot" data-progress-dot style="left: 0%"></div>
+        <div class="card__countdown-section">
+          <div class="card__countdown-label" data-countdown-label>—</div>
+          <div class="card__countdown" data-countdown>00:00:00</div>
+        </div>
+
+        <div class="card__progress-container">
+          <div class="card__progress-track">
+            <div class="card__progress-fill" data-progress-fill style="width: 0%"></div>
+            <div class="card__progress-dot" data-progress-dot style="left: 0%"></div>
+          </div>
+        </div>
+
+        <div class="card__sessions">
+          <div class="session-row session-row--regular">
+            <span class="session-label">Regular</span>
+            <span class="session-times">
+              <span class="time-exchange">${regularOpen} – ${regularClose}</span>
+              <span class="time-local">${localOpen} – ${localClose} local</span>
+            </span>
+          </div>
+          ${extendedInfo}
+        </div>
       </div>
-    </div>
 
-    <div class="card__sessions">
-      <div class="session-row session-row--regular">
-        <span class="session-label">Regular</span>
-        <span class="session-times">
-          <span class="time-exchange">${regularOpen} – ${regularClose}</span>
-          <span class="time-local">${localOpen} – ${localClose} local</span>
-        </span>
-      </div>
-      ${extendedInfo}
-    </div>
+      <!-- Back Face (Clock) -->
+      <div class="market-card__face market-card__face--back">
+        ${headerHtml}
 
-    <!-- Modern Analog Clock -->
-    <div class="card__analog-clock-container">
-      <div class="card__analog-clock-wrapper">
-        <svg class="analog-clock" viewBox="0 0 200 200" width="165" height="165">
-          <rect x="5" y="5" width="190" height="190" rx="46" ry="46" class="clock__face" />
-          <path class="clock__open-arc" d="" fill="none" />
-          <g class="clock__ticks">
-            ${getClockTicksSVG()}
-          </g>
-          <text x="100" y="38" class="clock__num">12</text>
-          <text x="166" y="107" class="clock__num">3</text>
-          <text x="100" y="176" class="clock__num">6</text>
-          <text x="34" y="107" class="clock__num">9</text>
-          
-          <!-- Day/Night Complication (above 6) -->
-          <g class="clock__day-night" transform="translate(100, 146)"></g>
-          
-          <g class="clock__date-group">
-            <text class="clock__date-day" x="134" y="93">--</text>
-            <text class="clock__date-num" x="134" y="113">--</text>
-          </g>
+        <div class="card__analog-clock-container">
+          <div class="card__analog-clock-wrapper">
+            <svg class="analog-clock" viewBox="0 0 200 200">
+              <rect x="5" y="5" width="190" height="190" rx="46" ry="46" class="clock__face" />
+              <path class="clock__open-arc" d="" fill="none" />
+              <g class="clock__ticks">
+                ${getClockTicksSVG()}
+              </g>
+              <text x="100" y="38" class="clock__num">12</text>
+              <text x="166" y="107" class="clock__num">3</text>
+              <text x="100" y="176" class="clock__num">6</text>
+              <text x="34" y="107" class="clock__num">9</text>
+              
+              <!-- Day/Night Complication (above 6) -->
+              <g class="clock__day-night" transform="translate(100, 146)"></g>
+              
+              <g class="clock__date-group">
+                <text class="clock__date-day" x="134" y="93">--</text>
+                <text class="clock__date-num" x="134" y="113">--</text>
+              </g>
 
-          <g class="clock__hand-group clock__hand-group--hour">
-            <line class="clock__hand clock__hand--hour" x1="100" y1="100" x2="100" y2="62" stroke-linecap="round" />
-          </g>
-          <g class="clock__hand-group clock__hand-group--minute">
-            <line class="clock__hand clock__hand--minute" x1="100" y1="100" x2="100" y2="44" stroke-linecap="round" />
-          </g>
-          <g class="clock__hand-group clock__hand-group--second">
-            <line class="clock__hand clock__hand--second" x1="100" y1="112" x2="100" y2="30" stroke-linecap="round" />
-          </g>
-          <circle cx="100" cy="100" r="3.5" class="clock__pin" />
-        </svg>
+              <g class="clock__hand-group clock__hand-group--hour">
+                <line class="clock__hand clock__hand--hour" x1="100" y1="100" x2="100" y2="62" stroke-linecap="round" />
+              </g>
+              <g class="clock__hand-group clock__hand-group--minute">
+                <line class="clock__hand clock__hand--minute" x1="100" y1="100" x2="100" y2="44" stroke-linecap="round" />
+              </g>
+              <g class="clock__hand-group clock__hand-group--second">
+                <line class="clock__hand clock__hand--second" x1="100" y1="112" x2="100" y2="30" stroke-linecap="round" />
+              </g>
+              <circle cx="100" cy="100" r="3.5" class="clock__pin" />
+            </svg>
+          </div>
+        </div>
       </div>
     </div>
   `;
 
   // Bell button handler
-  const bellBtn = card.querySelector('.bell-btn');
-  bellBtn.addEventListener('click', (e) => {
-    e.stopPropagation();
-    const isActive = toggleBellAlert(market.id);
-    bellBtn.classList.toggle('bell-btn--active', isActive);
-    bellBtn.title = isActive ? 'Disable open alert' : 'Enable open alert';
+  const bellBtns = card.querySelectorAll('.bell-btn');
+  bellBtns.forEach((btn) => {
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const isActive = toggleBellAlert(market.id);
+      
+      bellBtns.forEach((b) => {
+        b.classList.toggle('bell-btn--active', isActive);
+        b.title = isActive ? 'Disable open alert' : 'Enable open alert';
 
-    // Update active dot
-    const existingDot = bellBtn.querySelector('.bell-active-dot');
-    if (isActive && !existingDot) {
-      const dot = document.createElement('span');
-      dot.className = 'bell-active-dot';
-      bellBtn.appendChild(dot);
-    } else if (!isActive && existingDot) {
-      existingDot.remove();
-    }
+        // Update active dot
+        const existingDot = b.querySelector('.bell-active-dot');
+        if (isActive && !existingDot) {
+          const dot = document.createElement('span');
+          dot.className = 'bell-active-dot';
+          b.appendChild(dot);
+        } else if (!isActive && existingDot) {
+          existingDot.remove();
+        }
+      });
 
-    // Request notification permission on first bell activation
-    if (isActive && 'Notification' in window && Notification.permission === 'default') {
-      Notification.requestPermission();
+      // Request notification permission on first bell activation
+      if (isActive && 'Notification' in window && Notification.permission === 'default') {
+        Notification.requestPermission();
+      }
+    });
+  });
+
+  // Card click flip handler
+  card.addEventListener('click', (e) => {
+    // Ignore click if it targets the bell button, drag handle, or anything inside them
+    if (e.target.closest('.bell-btn') || e.target.closest('.card__drag-handle')) {
+      return;
     }
+    const isNowFlipped = toggleCardFlipped(market.id);
+    card.classList.toggle('market-card--flipped', isNowFlipped);
   });
 
   return card;
@@ -291,16 +326,18 @@ export function updateMarketCard(card, market) {
   const config = STATUS_CONFIG[status.status] || STATUS_CONFIG.closed;
   const countdown = formatCountdown(status.nextEvent?.countdown || 0);
 
-  // Update card border/glow class
-  card.className = `market-card ${config.borderClass}`;
+  // Update card border/glow class safely without overwriting other classes
+  const statusClasses = ['card--open', 'card--pre-market', 'card--after-hours', 'card--lunch-break', 'card--closed', 'card--holiday', 'card--weekend'];
+  card.classList.remove(...statusClasses);
+  card.classList.add(config.borderClass);
   card.dataset.marketId = market.id;
 
-  // Update badge
-  const badge = card.querySelector('[data-status-badge]');
-  if (badge) {
+  // Update badge on both faces
+  const badges = card.querySelectorAll('[data-status-badge]');
+  badges.forEach((badge) => {
     badge.textContent = status.label;
     badge.className = `card__badge ${config.badgeClass}`;
-  }
+  });
 
   // Update countdown
   const countdownEl = card.querySelector('[data-countdown]');
@@ -390,6 +427,5 @@ export function updateMarketCard(card, market) {
       }
     }
   }
-
   return status;
 }
