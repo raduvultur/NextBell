@@ -51,6 +51,14 @@ export function createHeader(onFilterChange) {
             <span class="clock__label" id="local-tz-label">Local</span>
             <span class="clock__time" id="local-time">--:--:--</span>
           </div>
+          <div class="clock__divider"></div>
+          <div class="clock__feed header__freshness" id="data-freshness">
+            <span class="clock__label">Feed</span>
+            <span class="freshness__value">
+              <span class="freshness__dot"></span>
+              <span class="freshness__text">Connecting…</span>
+            </span>
+          </div>
         </div>
       </div>
 
@@ -256,4 +264,36 @@ function showManageModal(onFilterChange) {
       onFilterChange();
     });
   });
+}
+
+/**
+ * Update the data freshness UI component.
+ */
+export function updateFreshness(secondsAgo) {
+  const freshnessEl = document.getElementById('data-freshness');
+  if (!freshnessEl) return;
+
+  const dot = freshnessEl.querySelector('.freshness__dot');
+  const text = freshnessEl.querySelector('.freshness__text');
+  if (!dot || !text) return;
+
+  freshnessEl.classList.remove('freshness--stale', 'freshness--disconnected', 'freshness--live');
+
+  if (secondsAgo < 120) {
+    freshnessEl.classList.add('freshness--live');
+    dot.style.background = 'var(--color-open)';
+    dot.style.boxShadow = '0 0 8px var(--color-open-glow)';
+    text.textContent = `Live · ${secondsAgo}s`;
+  } else if (secondsAgo < 300) {
+    freshnessEl.classList.add('freshness--stale');
+    dot.style.background = 'var(--color-pre-market)';
+    dot.style.boxShadow = '0 0 8px var(--color-pre-market-glow)';
+    const mins = Math.floor(secondsAgo / 60);
+    text.textContent = `Stale · ${mins}m`;
+  } else {
+    freshnessEl.classList.add('freshness--disconnected');
+    dot.style.background = 'var(--color-holiday)';
+    dot.style.boxShadow = '0 0 8px rgba(239, 68, 68, 0.4)';
+    text.textContent = 'Offline';
+  }
 }

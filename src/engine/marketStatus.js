@@ -63,13 +63,15 @@ export function getMarketStatus(market, now = new Date()) {
   const currentMinutes = tz.totalMinutes;
 
   // Check if today is a holiday
-  if (market.holidays.includes(tz.dateStr)) {
+  const matchedHoliday = market.holidays.find(h => h.date === tz.dateStr);
+  if (matchedHoliday) {
     return {
       status: 'holiday',
       label: 'Holiday',
       currentSession: null,
       nextEvent: getNextTradingEvent(market, now),
       progress: 0,
+      holidayName: matchedHoliday.name,
     };
   }
 
@@ -249,7 +251,8 @@ export function getNextTradingEvent(market, now = new Date()) {
     const tz = getNowInTimezone(market.timezone, futureDate);
 
     // Check if it's a trading day and not a holiday
-    if (market.tradingDays.includes(tz.dayOfWeek) && !market.holidays.includes(tz.dateStr)) {
+    const isHoliday = market.holidays.some(h => h.date === tz.dateStr);
+    if (market.tradingDays.includes(tz.dayOfWeek) && !isHoliday) {
       // Next event is the first session of that day
       const firstSession = market.sessions.preMarket
         ? { type: 'pre-market', label: 'Pre-market opens', timeStr: market.sessions.preMarket.open }
@@ -275,4 +278,24 @@ export function getNextTradingEvent(market, now = new Date()) {
   }
 
   return { type: 'unknown', label: 'Unknown', countdown: 0 };
+}
+
+/**
+ * Find the next upcoming holiday within the next 7 days, or null if none.
+ */
+export function getNextHoliday(market, now = new Date()) {
+  const maxDays = 7;
+  for (let d = 0; d <= maxDays; d++) {
+    const futureDate = new Date(now.getTime() + d * 24 * 60 * 60 * 1000);
+    const tz = getNowInTimezone(market.timezone, futureDate);
+    const matchedHoliday = market.holidays.find(h => h.date === tz.dateStr);
+    if (matchedHoliday) {
+      return {
+        date: matchedHoliday.date,
+        name: matchedHoliday.name,
+        daysAway: d,
+      };
+    }
+  }
+  return null;
 }

@@ -227,11 +227,49 @@ body::before {
 }
 
 .clock__utc,
-.clock__local {
+.clock__local,
+.clock__feed {
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 2px;
+}
+
+.freshness__value {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  height: 24px;
+}
+
+.freshness__dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--text-muted);
+  transition: all var(--transition-fast) ease;
+}
+
+.freshness__text {
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  letter-spacing: 0.02em;
+  font-variant-numeric: tabular-nums;
+  transition: color var(--transition-fast) ease;
+}
+
+.freshness--live .freshness__text {
+  color: var(--color-open);
+}
+
+.freshness--stale .freshness__text {
+  color: var(--color-pre-market);
+}
+
+.freshness--disconnected .freshness__text {
+  color: var(--color-holiday);
 }
 
 .clock__label {
@@ -676,6 +714,31 @@ body::before {
   background: rgba(71, 85, 105, 0.1);
   color: var(--color-weekend);
   border: 1px solid rgba(71, 85, 105, 0.2);
+}
+
+/* Holiday banner */
+.card__holiday-banner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-xs);
+  background: rgba(239, 68, 68, 0.08);
+  border: 1px solid rgba(239, 68, 68, 0.2);
+  border-radius: var(--radius-md);
+  padding: var(--space-xs) var(--space-sm);
+  margin: 0;
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--color-holiday);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  text-align: center;
+  animation: fadeIn var(--transition-base) ease;
+}
+
+.holiday-banner__icon {
+  font-size: 0.8rem;
+  line-height: 1;
 }
 
 /* Countdown section */

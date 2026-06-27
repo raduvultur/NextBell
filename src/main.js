@@ -5,7 +5,7 @@
 import './styles/index.css';
 import './styles/animations.css';
 import markets from './data/markets.js';
-import { createHeader, updateClocks } from './components/Header.js';
+import { createHeader, updateClocks, updateFreshness } from './components/Header.js';
 import { createMarketCard, updateMarketCard } from './components/MarketCard.js';
 import { loadPrefs, saveCardOrder } from './storage/preferences.js';
 import alertManager from './components/AlertManager.js';
@@ -18,6 +18,7 @@ let cardElements = new Map(); // marketId → DOM element
 let sortableInstance = null;
 let Sortable = null; // Lazy-loaded
 let liveQuotes = {}; // Cache for index quotes
+let lastQuoteTimestamp = null;
 
 // ─── Initialize ─────────────────────────────────────────
 function init() {
@@ -66,6 +67,26 @@ function init() {
 
   // Connect to WebSocket
   connectWebSocket();
+
+  // Prevent screen sleep
+  requestWakeLock();
+}
+
+// ─── Wake Lock ──────────────────────────────────────────
+async function requestWakeLock() {
+  if (!('wakeLock' in navigator)) return;
+  try {
+    let wakeLock = await navigator.wakeLock.request('screen');
+    console.log('[WakeLock] Screen Wake Lock acquired.');
+    document.addEventListener('visibilitychange', async () => {
+      if (document.visibilityState === 'visible') {
+        wakeLock = await navigator.wakeLock.request('screen');
+        console.log('[WakeLock] Screen Wake Lock re-acquired.');
+      }
+    });
+  } catch (err) {
+    console.warn('[WakeLock] Wake Lock not available:', err);
+  }
 }
 
 // ─── Render Cards ───────────────────────────────────────
@@ -175,6 +196,12 @@ function tick() {
   updateClocks();
   const statuses = updateAllCards();
   alertManager.checkAlerts(statuses);
+
+  // Update data freshness indicator
+  if (lastQuoteTimestamp) {
+    const secondsAgo = Math.floor((Date.now() - lastQuoteTimestamp) / 1000);
+    updateFreshness(secondsAgo);
+  }
 }
 
 // ─── Update All Cards ───────────────────────────────────
@@ -234,6 +261,7 @@ function connectWebSocket() {
       const message = JSON.parse(event.data);
       if (message.type === 'init' || message.type === 'update') {
         liveQuotes = { ...liveQuotes, ...message.data };
+        lastQuoteTimestamp = Date.now();
         updateAllCards();
       }
     } catch (err) {
@@ -243,6 +271,17 @@ function connectWebSocket() {
   
   ws.onclose = (event) => {
     console.warn(`[WS] Connection closed (code: ${event.code}). Reconnecting in 5s...`);
+    lastQuoteTimestamp = null;
+    const freshnessEl = document.getElementById('data-freshness');
+    if (freshnessEl) {
+      const dot = freshnessEl.querySelector('.freshness__dot');
+      const text = freshnessEl.querySelector('.freshness__text');
+      if (dot && text) {
+        dot.style.background = 'var(--color-holiday)';
+        dot.style.boxShadow = '0 0 8px rgba(239, 68, 68, 0.4)';
+        text.textContent = 'Reconnecting…';
+      }
+    }
     setTimeout(connectWebSocket, 5000);
   };
   

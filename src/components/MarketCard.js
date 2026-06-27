@@ -2,7 +2,7 @@
  * MarketCard component — renders a single market tile with
  * countdown, progress bar, session info, and bell toggle.
  */
-import { getMarketStatus, getNowInTimezone } from '../engine/marketStatus.js';
+import { getMarketStatus, getNowInTimezone, getNextHoliday } from '../engine/marketStatus.js';
 import { formatCountdown, exchangeTimeToLocal } from '../engine/countdown.js';
 import { loadPrefs, toggleBellAlert, toggleCardFlipped } from '../storage/preferences.js';
 
@@ -210,6 +210,8 @@ export function createMarketCard(market) {
       <div class="market-card__face market-card__face--front">
         ${headerHtml}
 
+        <div class="card__holiday-banner" data-holiday-banner style="display: none;"></div>
+
         <div class="card__countdown-section">
           <div class="card__countdown-label" data-countdown-label>—</div>
           <div class="card__countdown" data-countdown>00:00:00</div>
@@ -365,6 +367,23 @@ export function updateMarketCard(card, market, liveQuotes) {
   const labelEl = card.querySelector('[data-countdown-label]');
   if (labelEl) {
     labelEl.textContent = status.nextEvent?.label || '';
+  }
+
+  // Update holiday banner
+  const holidayBanner = card.querySelector('[data-holiday-banner]');
+  if (holidayBanner) {
+    const nextHoliday = getNextHoliday(market);
+    if (status.status === 'holiday') {
+      holidayBanner.style.display = 'block';
+      holidayBanner.innerHTML = `<span class="holiday-banner__icon">🔴</span> Holiday — ${status.holidayName || 'Market Holiday'}`;
+    } else if (nextHoliday && nextHoliday.daysAway <= 3) {
+      holidayBanner.style.display = 'block';
+      const dayWord = nextHoliday.daysAway === 0 ? 'Today' : (nextHoliday.daysAway === 1 ? 'Tomorrow' : `in ${nextHoliday.daysAway} days`);
+      holidayBanner.innerHTML = `<span class="holiday-banner__icon">⚠</span> Closed ${dayWord} — ${nextHoliday.name}`;
+    } else {
+      holidayBanner.style.display = 'none';
+      holidayBanner.innerHTML = '';
+    }
   }
 
   // Update progress
