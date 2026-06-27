@@ -17,6 +17,7 @@ import { showUpdateToast } from './components/UpdateToast.js';
 let cardElements = new Map(); // marketId → DOM element
 let sortableInstance = null;
 let Sortable = null; // Lazy-loaded
+let liveQuotes = {}; // Cache for index quotes
 
 // ─── Initialize ─────────────────────────────────────────
 function init() {
@@ -62,6 +63,9 @@ function init() {
   createOfflineBanner();
   initInstallPrompt();
   registerServiceWorker();
+
+  // Connect to WebSocket
+  connectWebSocket();
 }
 
 // ─── Render Cards ───────────────────────────────────────
@@ -178,7 +182,7 @@ function updateAllCards() {
   const statuses = [];
 
   cardElements.forEach(({ el, market }) => {
-    const status = updateMarketCard(el, market);
+    const status = updateMarketCard(el, market, liveQuotes);
     statuses.push({ market, status });
   });
 
@@ -211,6 +215,40 @@ async function registerServiceWorker() {
       console.warn('PWA registration failed:', e);
     }
   }
+}
+
+// ─── WebSocket Connection ──────────────────────────────
+function connectWebSocket() {
+  const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+  const wsUrl = `${protocol}//${window.location.host}/ws`;
+  
+  console.log(`[WS] Connecting to ${wsUrl}...`);
+  const ws = new WebSocket(wsUrl);
+  
+  ws.onopen = () => {
+    console.log('[WS] Connected successfully.');
+  };
+  
+  ws.onmessage = (event) => {
+    try {
+      const message = JSON.parse(event.data);
+      if (message.type === 'init' || message.type === 'update') {
+        liveQuotes = { ...liveQuotes, ...message.data };
+        updateAllCards();
+      }
+    } catch (err) {
+      console.error('[WS] Error parsing message:', err);
+    }
+  };
+  
+  ws.onclose = (event) => {
+    console.warn(`[WS] Connection closed (code: ${event.code}). Reconnecting in 5s...`);
+    setTimeout(connectWebSocket, 5000);
+  };
+  
+  ws.onerror = (err) => {
+    console.error('[WS] WebSocket error:', err);
+  };
 }
 
 // ─── Boot ───────────────────────────────────────────────

@@ -120,13 +120,13 @@ export function createMarketCard(market) {
   const localOpen = exchangeTimeToLocal(regularOpen, market.timezone);
   const localClose = exchangeTimeToLocal(regularClose, market.timezone);
 
-  // Pre-market / after-hours info
-  let extendedInfo = '';
+  // Pre-market and after-hours info
+  let preMarketHtml = '';
   if (sessions.preMarket) {
     const pmLocalOpen = exchangeTimeToLocal(sessions.preMarket.open, market.timezone);
     const pmLocalClose = exchangeTimeToLocal(sessions.preMarket.close, market.timezone);
-    extendedInfo += `
-      <div class="session-row session-row--extended">
+    preMarketHtml = `
+      <div class="session-column session-column--extended">
         <span class="session-label">Pre-Market</span>
         <span class="session-times">
           <span class="time-exchange">${sessions.preMarket.open} – ${sessions.preMarket.close}</span>
@@ -134,11 +134,12 @@ export function createMarketCard(market) {
         </span>
       </div>`;
   }
+  let afterHoursHtml = '';
   if (sessions.afterHours) {
     const ahLocalOpen = exchangeTimeToLocal(sessions.afterHours.open, market.timezone);
     const ahLocalClose = exchangeTimeToLocal(sessions.afterHours.close, market.timezone);
-    extendedInfo += `
-      <div class="session-row session-row--extended">
+    afterHoursHtml = `
+      <div class="session-column session-column--extended">
         <span class="session-label">After-Hours</span>
         <span class="session-times">
           <span class="time-exchange">${sessions.afterHours.open} – ${sessions.afterHours.close}</span>
@@ -214,6 +215,13 @@ export function createMarketCard(market) {
           <div class="card__countdown" data-countdown>00:00:00</div>
         </div>
 
+        ${market.index ? `
+        <div class="card__index">
+          <span class="card__index-name">${market.index.name}</span>
+          <span class="card__index-ticker" data-index-ticker>—</span>
+        </div>
+        ` : ''}
+
         <div class="card__progress-container">
           <div class="card__progress-track">
             <div class="card__progress-fill" data-progress-fill style="width: 0%"></div>
@@ -222,14 +230,15 @@ export function createMarketCard(market) {
         </div>
 
         <div class="card__sessions">
-          <div class="session-row session-row--regular">
+          ${preMarketHtml}
+          <div class="session-column session-column--regular">
             <span class="session-label">Regular</span>
             <span class="session-times">
               <span class="time-exchange">${regularOpen} – ${regularClose}</span>
               <span class="time-local">${localOpen} – ${localClose} local</span>
             </span>
           </div>
-          ${extendedInfo}
+          ${afterHoursHtml}
         </div>
       </div>
 
@@ -257,6 +266,14 @@ export function createMarketCard(market) {
                 <text class="clock__date-day" x="134" y="93">--</text>
                 <text class="clock__date-num" x="134" y="113">--</text>
               </g>
+
+              ${market.index ? `
+              <!-- Local Index Complication -->
+              <g class="clock__index-group">
+                <text class="clock__index-name" x="100" y="116">${market.shortName} Index</text>
+                <text class="clock__index-ticker" x="100" y="127" data-index-ticker-back>—</text>
+              </g>
+              ` : ''}
 
               <g class="clock__hand-group clock__hand-group--hour">
                 <line class="clock__hand clock__hand--hour" x1="100" y1="100" x2="100" y2="62" stroke-linecap="round" />
@@ -321,7 +338,7 @@ export function createMarketCard(market) {
  * Update a market card's dynamic content (countdown, status, progress).
  * Called every tick.
  */
-export function updateMarketCard(card, market) {
+export function updateMarketCard(card, market, liveQuotes) {
   const status = getMarketStatus(market);
   const config = STATUS_CONFIG[status.status] || STATUS_CONFIG.closed;
   const countdown = formatCountdown(status.nextEvent?.countdown || 0);
@@ -427,5 +444,47 @@ export function updateMarketCard(card, market) {
       }
     }
   }
+
+  // Update index quote if available
+  const indexTickerFront = card.querySelector('[data-index-ticker]');
+  const indexTickerBack = card.querySelector('[data-index-ticker-back]');
+  
+  if (market.index && liveQuotes) {
+    const quote = liveQuotes[market.index.symbol];
+    if (quote && quote.price !== undefined && quote.price !== null) {
+      const sign = quote.change >= 0 ? '+' : '';
+      const priceFormatted = quote.price.toLocaleString(undefined, {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+      });
+      const percentFormatted = quote.changePercent.toFixed(2);
+      
+      const changeText = `${sign}${quote.change.toLocaleString(undefined, {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+      })} (${sign}${percentFormatted}%)`;
+      
+      const isPositive = quote.change >= 0;
+      const colorClass = isPositive ? 'index--positive' : 'index--negative';
+      
+      if (indexTickerFront) {
+        indexTickerFront.innerHTML = `<span class="index__price">${priceFormatted}</span> <span class="index__change ${colorClass}">${changeText}</span>`;
+      }
+      
+      if (indexTickerBack) {
+        indexTickerBack.textContent = `${priceFormatted} (${sign}${percentFormatted}%)`;
+        indexTickerBack.setAttribute('class', `clock__index-ticker ${colorClass}`);
+      }
+    } else {
+      if (indexTickerFront) {
+        indexTickerFront.textContent = '—';
+      }
+      if (indexTickerBack) {
+        indexTickerBack.textContent = '—';
+        indexTickerBack.setAttribute('class', 'clock__index-ticker');
+      }
+    }
+  }
+
   return status;
 }

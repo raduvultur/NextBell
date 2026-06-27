@@ -23,6 +23,7 @@ const markets = [
       afterHours: { open: '16:00', close: '20:00' },
     },
     tradingDays: [1, 2, 3, 4, 5], // Mon-Fri
+    index: { symbol: '^NYA', name: 'NYSE Composite' },
   },
   {
     id: 'nasdaq',
@@ -38,6 +39,7 @@ const markets = [
       afterHours: { open: '16:00', close: '20:00' },
     },
     tradingDays: [1, 2, 3, 4, 5],
+    index: { symbol: '^IXIC', name: 'Nasdaq Composite' },
   },
   {
     id: 'tsx',
@@ -53,6 +55,7 @@ const markets = [
       afterHours: { open: '16:00', close: '17:00' },
     },
     tradingDays: [1, 2, 3, 4, 5],
+    index: { symbol: '^GSPTSE', name: 'S&P/TSX Composite' },
   },
   {
     id: 'bmv',
@@ -66,6 +69,7 @@ const markets = [
       regular: { open: '08:30', close: '15:00' },
     },
     tradingDays: [1, 2, 3, 4, 5],
+    index: { symbol: '^MXX', name: 'IPC Mexico' },
   },
   {
     id: 'b3',
@@ -81,6 +85,7 @@ const markets = [
       afterHours: { open: '17:30', close: '18:00' },
     },
     tradingDays: [1, 2, 3, 4, 5],
+    index: { symbol: '^BVSP', name: 'Bovespa' },
   },
 
   // ═══════════════════════════════════════════════════════
@@ -100,6 +105,7 @@ const markets = [
       afterHours: { open: '16:40', close: '17:15' },
     },
     tradingDays: [1, 2, 3, 4, 5],
+    index: { symbol: '^FTSE', name: 'FTSE 100' },
   },
   {
     id: 'xetra',
@@ -115,6 +121,7 @@ const markets = [
       afterHours: { open: '17:30', close: '20:00' },
     },
     tradingDays: [1, 2, 3, 4, 5],
+    index: { symbol: '^GDAXI', name: 'DAX 40' },
   },
   {
     id: 'euronext_paris',
@@ -130,6 +137,7 @@ const markets = [
       afterHours: { open: '17:30', close: '17:40' },
     },
     tradingDays: [1, 2, 3, 4, 5],
+    index: { symbol: '^FCHI', name: 'CAC 40' },
   },
   {
     id: 'euronext_amsterdam',
@@ -145,6 +153,7 @@ const markets = [
       afterHours: { open: '17:30', close: '17:40' },
     },
     tradingDays: [1, 2, 3, 4, 5],
+    index: { symbol: '^AEX', name: 'AEX Index' },
   },
   {
     id: 'bme_madrid',
@@ -159,6 +168,7 @@ const markets = [
       regular: { open: '09:00', close: '17:30' },
     },
     tradingDays: [1, 2, 3, 4, 5],
+    index: { symbol: '^IBEX', name: 'IBEX 35' },
   },
   {
     id: 'borsa_italiana',
@@ -174,6 +184,7 @@ const markets = [
       afterHours: { open: '18:00', close: '20:30' },
     },
     tradingDays: [1, 2, 3, 4, 5],
+    index: { symbol: 'FTSEMIB.MI', name: 'FTSE MIB' },
   },
   {
     id: 'six_swiss',
@@ -189,6 +200,7 @@ const markets = [
       afterHours: { open: '17:30', close: '17:40' },
     },
     tradingDays: [1, 2, 3, 4, 5],
+    index: { symbol: '^SSMI', name: 'SMI' },
   },
 
   // ═══════════════════════════════════════════════════════
@@ -207,6 +219,7 @@ const markets = [
     },
     lunchBreak: { start: '11:30', end: '12:30' },
     tradingDays: [1, 2, 3, 4, 5],
+    index: { symbol: '^N225', name: 'Nikkei 225' },
   },
   {
     id: 'sse',
@@ -221,6 +234,7 @@ const markets = [
     },
     lunchBreak: { start: '11:30', end: '13:00' },
     tradingDays: [1, 2, 3, 4, 5],
+    index: { symbol: '000001.SS', name: 'SSE Composite' },
   },
   {
     id: 'szse',
@@ -235,6 +249,7 @@ const markets = [
     },
     lunchBreak: { start: '11:30', end: '13:00' },
     tradingDays: [1, 2, 3, 4, 5],
+    index: { symbol: '399001.SZ', name: 'SZSE Component' },
   },
   {
     id: 'hkex',
@@ -250,6 +265,7 @@ const markets = [
     },
     lunchBreak: { start: '12:00', end: '13:00' },
     tradingDays: [1, 2, 3, 4, 5],
+    index: { symbol: '^HSI', name: 'Hang Seng Index' },
   },
   {
     id: 'krx',
@@ -265,6 +281,7 @@ const markets = [
       afterHours: { open: '15:40', close: '16:00' },
     },
     tradingDays: [1, 2, 3, 4, 5],
+    index: { symbol: '^KS11', name: 'KOSPI' },
   },
   {
     id: 'asx',
@@ -279,6 +296,7 @@ const markets = [
       regular: { open: '10:00', close: '16:00' },
     },
     tradingDays: [1, 2, 3, 4, 5],
+    index: { symbol: '^AXJO', name: 'S&P/ASX 200' },
   },
   {
     id: 'nse',
@@ -294,6 +312,7 @@ const markets = [
       afterHours: { open: '15:40', close: '16:00' },
     },
     tradingDays: [1, 2, 3, 4, 5],
+    index: { symbol: '^NSEI', name: 'Nifty 50' },
   },
   {
     id: 'sgx',
@@ -308,6 +327,7 @@ const markets = [
       regular: { open: '09:00', close: '17:00' },
     },
     tradingDays: [1, 2, 3, 4, 5],
+    index: { symbol: '^STI', name: 'Straits Times' },
   },
   {
     id: 'twse',
@@ -321,6 +341,7 @@ const markets = [
       regular: { open: '09:00', close: '13:30' },
     },
     tradingDays: [1, 2, 3, 4, 5],
+    index: { symbol: '^TWII', name: 'TAIEX' },
   },
 
   // ═══════════════════════════════════════════════════════
@@ -339,6 +360,7 @@ const markets = [
       regular: { open: '10:00', close: '15:00' },
     },
     tradingDays: [0, 1, 2, 3, 4], // Sun-Thu
+    index: { symbol: '^TASI.SR', name: 'TASI' },
   },
   {
     id: 'dfm',
@@ -353,6 +375,7 @@ const markets = [
       regular: { open: '10:00', close: '14:00' },
     },
     tradingDays: [1, 2, 3, 4, 5], // Mon-Fri
+    index: { symbol: 'DFMGI.AE', name: 'DFM General' },
   },
   {
     id: 'tase',
@@ -367,6 +390,7 @@ const markets = [
       regular: { open: '09:59', close: '17:15' },
     },
     tradingDays: [0, 1, 2, 3, 4], // Sun-Thu
+    index: { symbol: '^TA125.TA', name: 'TA-125' },
   },
   {
     id: 'bist',
@@ -381,6 +405,7 @@ const markets = [
     },
     lunchBreak: { start: '13:00', end: '14:00' },
     tradingDays: [1, 2, 3, 4, 5],
+    index: { symbol: '^XU100', name: 'BIST 100' },
   },
 
   // ═══════════════════════════════════════════════════════
@@ -398,6 +423,7 @@ const markets = [
       regular: { open: '09:00', close: '17:00' },
     },
     tradingDays: [1, 2, 3, 4, 5],
+    index: { symbol: '^J203.JO', name: 'FTSE/JSE All Share' },
   },
   {
     id: 'ngx',
@@ -411,6 +437,7 @@ const markets = [
       regular: { open: '10:00', close: '14:30' },
     },
     tradingDays: [1, 2, 3, 4, 5],
+    index: { symbol: '^NGSE', name: 'NGX All-Share' },
   },
 ];
 

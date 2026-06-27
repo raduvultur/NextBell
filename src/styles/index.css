@@ -789,50 +789,57 @@ body::before {
   margin-top: var(--space-md);
   border-top: 1px solid var(--border-default);
   padding-top: var(--space-sm);
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(68px, 1fr));
+  gap: var(--space-xs);
+  text-align: center;
 }
 
-.session-row {
+.session-column {
   display: flex;
+  flex-direction: column;
   align-items: center;
-  justify-content: space-between;
+  gap: 6px;
   padding: 4px 0;
 }
 
 .session-label {
-  font-size: 0.7rem;
-  font-weight: 600;
+  font-size: 0.625rem;
+  font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.05em;
   color: var(--text-muted);
-  flex-shrink: 0;
+  white-space: nowrap;
 }
 
-.session-row--regular .session-label {
+.session-column--regular .session-label {
   color: var(--text-secondary);
 }
 
 .session-times {
   display: flex;
   flex-direction: column;
-  align-items: flex-end;
-  gap: 1px;
+  align-items: center;
+  gap: 2px;
 }
 
 .time-exchange {
   font-family: var(--font-mono);
-  font-size: 0.75rem;
+  font-size: 0.72rem;
   font-weight: 600;
   color: var(--text-primary);
   font-variant-numeric: tabular-nums;
+  white-space: nowrap;
 }
 
 .time-local {
-  font-size: 0.65rem;
+  font-size: 0.6rem;
   color: var(--text-muted);
   font-variant-numeric: tabular-nums;
+  white-space: nowrap;
 }
 
-.session-row--extended {
+.session-column--extended {
   opacity: 0.7;
 }
 
@@ -1556,4 +1563,82 @@ body::before {
   height: 24px;
   top: 0;
   bottom: auto;
+}
+
+/* Live Index Tickers & Complications */
+.card__index {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: var(--space-xs) 0 var(--space-sm) 0;
+  padding: 8px 12px;
+  background: rgba(255, 255, 255, 0.02);
+  border-radius: var(--radius-md);
+  border: 1px solid rgba(255, 255, 255, 0.04);
+  transition: all var(--transition-fast);
+}
+
+.card__index-name {
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.card__index-ticker {
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+  color: var(--text-primary);
+}
+
+.index__price {
+  color: var(--text-primary);
+}
+
+/* Colors and Glow Effects */
+.index--positive {
+  color: hsl(142, 70%, 50%) !important;
+  text-shadow: 0 0 8px hsla(142, 70%, 50%, 0.35);
+  transition: color 0.3s ease, text-shadow 0.3s ease;
+}
+
+.index--negative {
+  color: hsl(350, 75%, 55%) !important;
+  text-shadow: 0 0 8px hsla(350, 75%, 55%, 0.35);
+  transition: color 0.3s ease, text-shadow 0.3s ease;
+}
+
+/* SVG specific styling for analog clock complications */
+.clock__index-name {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 8px;
+  font-weight: 700;
+  fill: var(--text-muted);
+  text-anchor: middle;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.clock__index-ticker {
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  font-weight: 700;
+  fill: var(--text-secondary);
+  text-anchor: middle;
+  font-variant-numeric: tabular-nums;
+  transition: fill 0.3s ease;
+}
+
+.clock__index-ticker.index--positive {
+  fill: hsl(142, 70%, 50%) !important;
+}
+
+.clock__index-ticker.index--negative {
+  fill: hsl(350, 75%, 55%) !important;
 }

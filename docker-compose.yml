@@ -1,8 +1,16 @@
 services:
+  backend:
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    restart: unless-stopped
+
   nextbell:
     build:
       context: .
       dockerfile: Dockerfile
     ports:
       - "8080:80"
+    depends_on:
+      - backend
     restart: unless-stopped
