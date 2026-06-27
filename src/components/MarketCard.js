@@ -215,13 +215,6 @@ export function createMarketCard(market) {
           <div class="card__countdown" data-countdown>00:00:00</div>
         </div>
 
-        ${market.index ? `
-        <div class="card__index">
-          <span class="card__index-name">${market.index.name}</span>
-          <span class="card__index-ticker" data-index-ticker>—</span>
-        </div>
-        ` : ''}
-
         <div class="card__progress-container">
           <div class="card__progress-track">
             <div class="card__progress-fill" data-progress-fill style="width: 0%"></div>
@@ -240,6 +233,13 @@ export function createMarketCard(market) {
           </div>
           ${afterHoursHtml}
         </div>
+
+        ${market.index ? `
+        <div class="card__index">
+          <span class="card__index-name">${market.index.name}</span>
+          <span class="card__index-ticker" data-index-ticker>—</span>
+        </div>
+        ` : ''}
       </div>
 
       <!-- Back Face (Clock) -->
@@ -267,14 +267,6 @@ export function createMarketCard(market) {
                 <text class="clock__date-num" x="134" y="113">--</text>
               </g>
 
-              ${market.index ? `
-              <!-- Local Index Complication -->
-              <g class="clock__index-group">
-                <text class="clock__index-name" x="100" y="116">${market.shortName} Index</text>
-                <text class="clock__index-ticker" x="100" y="127" data-index-ticker-back>—</text>
-              </g>
-              ` : ''}
-
               <g class="clock__hand-group clock__hand-group--hour">
                 <line class="clock__hand clock__hand--hour" x1="100" y1="100" x2="100" y2="62" stroke-linecap="round" />
               </g>
@@ -288,6 +280,13 @@ export function createMarketCard(market) {
             </svg>
           </div>
         </div>
+
+        ${market.index ? `
+        <div class="card__index">
+          <span class="card__index-name">${market.index.name}</span>
+          <span class="card__index-ticker" data-index-ticker-back>—</span>
+        </div>
+        ` : ''}
       </div>
     </div>
   `;
@@ -472,8 +471,7 @@ export function updateMarketCard(card, market, liveQuotes) {
       }
       
       if (indexTickerBack) {
-        indexTickerBack.textContent = `${priceFormatted} (${sign}${percentFormatted}%)`;
-        indexTickerBack.setAttribute('class', `clock__index-ticker ${colorClass}`);
+        indexTickerBack.innerHTML = `<span class="index__price">${priceFormatted}</span> <span class="index__change ${colorClass}">${changeText}</span>`;
       }
     } else {
       if (indexTickerFront) {
@@ -481,7 +479,6 @@ export function updateMarketCard(card, market, liveQuotes) {
       }
       if (indexTickerBack) {
         indexTickerBack.textContent = '—';
-        indexTickerBack.setAttribute('class', 'clock__index-ticker');
       }
     }
   }

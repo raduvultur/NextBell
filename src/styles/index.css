@@ -1568,8 +1568,8 @@ body::before {
 /* Live Index Tickers & Complications */
 .card__index {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
+  flex-direction: column;
+  gap: var(--space-xs);
   margin: var(--space-xs) 0 var(--space-sm) 0;
   padding: 8px 12px;
   background: rgba(255, 255, 255, 0.02);
@@ -1579,22 +1579,24 @@ body::before {
 }
 
 .card__index-name {
-  font-size: 0.72rem;
+  font-size: 0.68rem;
   font-weight: 600;
   color: var(--text-muted);
   text-transform: uppercase;
   letter-spacing: 0.04em;
+  align-self: flex-start;
 }
 
 .card__index-ticker {
   font-family: var(--font-mono);
-  font-size: 0.78rem;
+  font-size: 0.76rem;
   font-weight: 600;
   font-variant-numeric: tabular-nums;
   display: flex;
   align-items: center;
   gap: var(--space-xs);
   color: var(--text-primary);
+  align-self: flex-end;
 }
 
 .index__price {
