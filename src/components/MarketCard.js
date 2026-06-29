@@ -371,18 +371,32 @@ export function updateMarketCard(card, market, liveQuotes) {
 
   // Update holiday banner
   const holidayBanner = card.querySelector('[data-holiday-banner]');
+  const progressContainer = card.querySelector('.card__progress-container');
   if (holidayBanner) {
     const nextHoliday = getNextHoliday(market);
+    const hasBanner = (status.status === 'holiday') || (nextHoliday && nextHoliday.daysAway <= 3);
+
     if (status.status === 'holiday') {
       holidayBanner.style.display = 'block';
-      holidayBanner.innerHTML = `<span class="holiday-banner__icon">🔴</span> Holiday — ${status.holidayName || 'Market Holiday'}`;
+      holidayBanner.innerHTML = `<span class="holiday-banner__icon">🔴</span> Holiday`;
+      holidayBanner.setAttribute('data-tooltip', status.holidayName || 'Market Holiday');
     } else if (nextHoliday && nextHoliday.daysAway <= 3) {
       holidayBanner.style.display = 'block';
       const dayWord = nextHoliday.daysAway === 0 ? 'Today' : (nextHoliday.daysAway === 1 ? 'Tomorrow' : `in ${nextHoliday.daysAway} days`);
-      holidayBanner.innerHTML = `<span class="holiday-banner__icon">⚠</span> Closed ${dayWord} — ${nextHoliday.name}`;
+      holidayBanner.innerHTML = `<span class="holiday-banner__icon">⚠</span> Closed ${dayWord}`;
+      holidayBanner.setAttribute('data-tooltip', nextHoliday.name);
     } else {
       holidayBanner.style.display = 'none';
       holidayBanner.innerHTML = '';
+      holidayBanner.removeAttribute('data-tooltip');
+    }
+
+    if (progressContainer) {
+      if (hasBanner) {
+        progressContainer.classList.add('card__progress-container--compact');
+      } else {
+        progressContainer.classList.remove('card__progress-container--compact');
+      }
     }
   }
 

@@ -718,6 +718,7 @@ body::before {
 
 /* Holiday banner */
 .card__holiday-banner {
+  position: relative; /* required for tooltip */
   display: flex;
   align-items: center;
   justify-content: center;
@@ -733,7 +734,55 @@ body::before {
   letter-spacing: 0.04em;
   text-transform: uppercase;
   text-align: center;
+  cursor: help;
   animation: fadeIn var(--transition-base) ease;
+}
+
+/* Custom Tooltip on Hover (Immediate) */
+.card__holiday-banner::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  top: calc(100% + 6px); /* position below the banner to avoid clipping */
+  left: 50%;
+  transform: translateX(-50%) translateY(-4px);
+  background: #1e293b; /* dark premium background */
+  border: 1px solid #334155;
+  color: #f8fafc;
+  padding: 6px 12px;
+  border-radius: var(--radius-md);
+  font-size: 0.7rem;
+  font-weight: 500;
+  text-transform: none; /* keep actual holiday name casing */
+  letter-spacing: 0.01em;
+  white-space: nowrap;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.1s ease, transform 0.1s ease;
+  z-index: 100;
+}
+
+/* Tooltip Arrow */
+.card__holiday-banner::before {
+  content: '';
+  position: absolute;
+  top: calc(100% + 2px);
+  left: 50%;
+  transform: translateX(-50%) translateY(-4px);
+  border-width: 0 4px 4px;
+  border-style: solid;
+  border-color: transparent transparent #334155;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.1s ease, transform 0.1s ease;
+  z-index: 100;
+}
+
+/* Hover States (display instantly) */
+.card__holiday-banner:hover::after,
+.card__holiday-banner:hover::before {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
 }
 
 .holiday-banner__icon {
@@ -778,9 +827,14 @@ body::before {
   color: var(--color-after-hours);
 }
 
-/* Progress bar */
 .card__progress-container {
   margin: var(--space-md) 0;
+  transition: margin var(--transition-base) ease;
+}
+
+.card__progress-container--compact {
+  margin-top: 0;
+  margin-bottom: 0;
 }
 
 .card__progress-track {
